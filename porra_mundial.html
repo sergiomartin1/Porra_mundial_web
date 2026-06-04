@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Porra Mundial 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+            padding: 24px 40px;
+            border-bottom: 3px solid #2d3748;
+        }
+
+        .header h1 {
+            font-size: 1.75em;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 0.95em;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        .user-selector {
+            background: #ffffff;
+            padding: 16px 40px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .user-selector label {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-right: 15px;
+        }
+
+        .user-selector select {
+            padding: 12px 20px;
+            font-size: 1.1em;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-selector select:hover {
+            border-color: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .save-button {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .save-button:hover {
+            background: #38a169;
+            box-shadow: 0 2px 8px rgba(72, 187, 120, 0.3);
+        }
+
+        .view-button {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .view-button:hover {
+            background: #3182ce;
+            box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+        }
+
+        .content {
+            padding: 32px 40px;
+            background: #f7fafc;
+        }
+
+        .group-section {
+            margin-bottom: 40px;
+        }
+
+        .group-header {
+            background: #2d3748;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 1.1em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .match-date {
+            background: #edf2f7;
+            padding: 8px 16px;
+            border-left: 4px solid #4299e1;
+            margin: 20px 0 12px 0;
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 0.9em;
+        }
+
+        .match-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .match-card:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .match-info {
+            flex: 1;
+        }
+
+        .match-teams {
+            font-size: 1.05em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .match-details {
+            font-size: 0.85em;
+            color: #718096;
+        }
+
+        .match-time {
+            color: #4299e1;
+            font-weight: 600;
+        }
+
+        .bet-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .bet-button {
+            padding: 10px 20px;
+            border: 1.5px solid #cbd5e0;
+            background: white;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.2s;
+            min-width: 55px;
+        }
+
+        .bet-button:hover {
+            background: #f7fafc;
+            border-color: #a0aec0;
+        }
+
+        .bet-button.selected-1 {
+            background: #48bb78;
+            color: white;
+            border-color: #48bb78;
+        }
+
+        .bet-button.selected-X {
+            background: #ed8936;
+            color: white;
+            border-color: #ed8936;
+        }
+
+        .bet-button.selected-2 {
+            background: #f56565;
+            color: white;
+            border-color: #f56565;
+        }
+
+        .summary-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .summary-content {
+            background: white;
+            max-width: 1200px;
+            margin: 50px auto;
+            border-radius: 12px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #a0aec0;
+            transition: color 0.2s;
+        }
+
+        .close-button:hover {
+            color: #2d3748;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+            font-size: 0.9em;
+        }
+
+        .summary-table th,
+        .summary-table td {
+            padding: 12px 10px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .summary-table th {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-table tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        .bet-1 {
+            color: #48bb78;
+            font-weight: 600;
+        }
+
+        .bet-X {
+            color: #ed8936;
+            font-weight: 600;
+        }
+
+        .bet-2 {
+            color: #f56565;
+            font-weight: 600;
+        }
+
+        .save-message {
+            display: none;
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: #48bb78;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+            z-index: 2000;
+            animation: slideIn 0.3s;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .admin-result {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .admin-result input {
+            width: 60px;
+            padding: 10px 8px;
+            font-size: 1em;
+            text-align: center;
+            border: 1.5px solid #cbd5e0;
+            border-radius: 6px;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .admin-result input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .admin-result span {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .save-result-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .save-result-btn:hover {
+            background: #38a169;
+            box-shadow: 0 2px 8px rgba(72, 187, 120, 0.3);
+        }
+
+        .standings-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .standings-table th,
+        .standings-table td {
+            padding: 12px 8px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .standings-table th {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .standings-table tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        .standings-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .qualified {
+            background: #c6f6d5 !important;
+        }
+
+        .user-scores-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+            font-size: 0.9em;
+        }
+
+        .user-scores-table th,
+        .user-scores-table td {
+            padding: 14px 12px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .user-scores-table th {
+            background: linear-gradient(135deg, #6f42c1 0%, #805ad5 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .user-scores-table tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        .user-scores-table td:first-child {
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        .admin-mode {
+            background: #fffaf0;
+            border: 2px solid #fbd38d;
+        }
+
+        .result-saved {
+            background: #f0fff4;
+            border-color: #9ae6b4;
+        }
+
+        .match-result-display {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #48bb78;
+            margin-left: 8px;
+        }
+
+        .country-flag {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 12px;
+            padding: 48px 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            max-width: 440px;
+            width: 100%;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-header h1 {
+            color: #1a365d;
+            font-size: 1.75em;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .login-header p {
+            color: #718096;
+            font-size: 0.95em;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.95em;
+            transition: all 0.2s;
+            background: #f7fafc;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #4299e1;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .remember-me label {
+            font-size: 0.9em;
+            color: #4a5568;
+            cursor: pointer;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .login-button {
+            width: 100%;
+            background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .login-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #fc8181;
+            display: none;
+            font-size: 0.9em;
+        }
+
+        .logout-button {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .logout-button:hover {
+            background: #c53030;
+            box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3);
+        }
+
+        .user-info {
+            background: #ebf8ff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #2c5282;
+            font-weight: 600;
+            font-size: 0.9em;
+            border: 1px solid #bee3f8;
+        }
+
+        .user-profile-photo {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4299e1;
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+            display: none;
+        }
+
+        .user-profile-photo.visible {
+            display: block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .cheat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            overflow-y: auto;
+            animation: fadeIn 0.3s;
+        }
+
+        .cheat-content {
+            background: linear-gradient(135deg, #ff0000 0%, #990000 100%);
+            max-width: 700px;
+            margin: 50px auto;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(255, 0, 0, 0.5);
+            border: 5px solid #ffff00;
+        }
+
+        .cheat-title {
+            font-size: 2.5em;
+            font-weight: 900;
+            color: #ffff00;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
+            margin-bottom: 30px;
+            animation: pulse 1s infinite;
+            letter-spacing: 3px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .cheat-images {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .cheat-images img {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 4px solid #ffff00;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: block;
+        }
+
+        .unlock-section {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .unlock-section p {
+            color: white;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .unlock-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 18px;
+            font-size: 1.2em;
+            border: 3px solid #ffff00;
+            border-radius: 10px;
+            background: white;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .unlock-button {
+            background: #ffff00;
+            color: #990000;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.3em;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 900;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(255, 255, 0, 0.4);
+        }
+
+        .unlock-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(255, 255, 0, 0.6);
+        }
+
+        .unlock-error {
+            color: #ffff00;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .delete-button-small {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            font-size: 0.75em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        .delete-button-small:hover {
+            background: #c53030;
+            opacity: 1;
+            box-shadow: 0 2px 6px rgba(229, 62, 62, 0.3);
+        }
+
+        .delete-group-button {
+            background: #ed8936;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.7em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            opacity: 0.7;
+            margin-left: 10px;
+        }
+
+        .delete-group-button:hover {
+            background: #dd6b20;
+            opacity: 1;
+            box-shadow: 0 2px 6px rgba(237, 137, 54, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de Login -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>PORRA MUNDIAL 2026</h1>
+                <p>Inicia sesión para acceder</p>
+            </div>
+            <div class="error-message" id="loginError">
+                Usuario o contraseña incorrectos
+            </div>
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label for="loginUser">Usuario:</label>
+                    <select id="loginUser" required>
+                        <option value="">-- Selecciona tu usuario --</option>
+                        <option value="PIN">PIN</option>
+                        <option value="MIGUEL">MIGUEL</option>
+                        <option value="MARTINEZ">MARTINEZ</option>
+                        <option value="SERGIO">SERGIO</option>
+                        <option value="JONATHAN">JONATHAN</option>
+                        <option value="QUIROGA">QUIROGA</option>
+                        <option value="JESUS">JESUS</option>
+                        <option value="PABLO">PABLO</option>
+                        <option value="PARDO">PARDO</option>
+                        <option value="SOFÍA">SOFÍA</option>
+                        <option value="IRIA">IRIA</option>
+                        <option value="MARTA">MARTA</option>
+                        <option value="ADMIN">🔑 ADMIN</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Contraseña:</label>
+                    <input type="password" id="loginPassword" placeholder="Introduce tu contraseña" required>
+                </div>
+                <div class="remember-me">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Recordar mi sesión en este dispositivo</label>
+                </div>
+                <button type="submit" class="login-button">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Aplicación Principal -->
+    <div class="container hidden" id="mainApp">
+        <div class="header">
+            <h1>PORRA MUNDIAL 2026 ⚽</h1>
+            <p>Fase de Grupos - ¡Haz tus apuestas!</p>
+        </div>
+
+        <div class="user-selector">
+            <span class="user-info" id="currentUserInfo">Usuario: <span id="currentUserName"></span></span>
+            <button class="save-button" onclick="saveBets()" id="saveBetsBtn">Guardar Apuestas</button>
+            <button class="view-button" onclick="viewAllBets()">Ver Todas las Apuestas</button>
+            <button class="view-button" onclick="viewStandings()" style="background: #fd7e14;">Clasificación</button>
+            <button class="view-button" onclick="viewUserScores()" style="background: #6f42c1;">Puntuación Usuarios</button>
+            <button class="view-button" onclick="viewBrackets()" style="background: #e74c3c;">🏆 Cuadros</button>
+            <button class="logout-button" onclick="logout()">Cerrar Sesión</button>
+            <img id="userProfilePhoto" class="user-profile-photo" src="" alt="Foto de perfil">
+        </div>
+
+        <div class="content" id="matchesContainer">
+            <!-- Los partidos se cargarán aquí con JavaScript -->
+        </div>
+    </div>
+
+    <div class="summary-modal" id="summaryModal">
+        <div class="summary-content">
+            <span class="close-button" onclick="closeSummary()">&times;</span>
+            <h2>📊 Resumen de Todas las Apuestas</h2>
+            <div class="stats" id="statsContainer"></div>
+            <div id="summaryTableContainer"></div>
+        </div>
+    </div>
+
+    <div class="save-message" id="saveMessage">
+        Apuestas guardadas correctamente
+    </div>
+
+    <!-- Modal de Bloqueo Anti-Trampa -->
+    <div class="cheat-modal" id="cheatModal">
+        <div class="cheat-content">
+            <h1 class="cheat-title">⚠️ ERES UN TRAMPOSO Y UN MARICON ⚠️</h1>
+            
+            <div class="cheat-images">
+                <img src="foto_fecha.jpg" alt="Evidencia 1">
+                <img src="foto_fecha2.jpg" alt="Evidencia 2">
+                <img src="foto_fecha3.jpg" alt="Evidencia 3">
+            </div>
+
+            <div class="unlock-section">
+                <p>🔒 Has sido bloqueado por intentar hacer trampa</p>
+                <p>Para desbloquear, escribe la siguiente frase:</p>
+                <p style="font-size: 1.4em; color: #ffff00;">"SOY MARICON Y NO ME DA MIEDO DECIRLO"</p>
+                <input type="text" id="unlockInput" class="unlock-input" placeholder="Escribe aquí...">
+                <br>
+                <button class="unlock-button" onclick="attemptUnlock()">DESBLOQUEAR</button>
+                <p class="unlock-error" id="unlockError">❌ Frase incorrecta. Inténtalo de nuevo.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const matches = [
+            // Grupo A
+            { date: "Domingo 11 junio 2026", time: "21:00", home: "México", away: "Sudáfrica", group: "A", venue: "Ciudad de México" },
+            { date: "Viernes 12 junio 2026", time: "04:00", home: "República de Corea", away: "Chequia", group: "A", venue: "Guadalajara" },
+            { date: "Jueves 18 junio 2026", time: "18:00", home: "Chequia", away: "Sudáfrica", group: "A", venue: "Atlanta" },
+            { date: "Viernes 19 junio 2026", time: "03:00", home: "México", away: "República de Corea", group: "A", venue: "Guadalajara" },
+            { date: "Jueves 25 junio 2026", time: "03:00", home: "Chequia", away: "México", group: "A", venue: "Ciudad de México" },
+            { date: "Jueves 25 junio 2026", time: "03:00", home: "Sudáfrica", away: "República de Corea", group: "A", venue: "Monterrey" },
+
+            // Grupo B
+            { date: "Viernes 12 junio 2026", time: "21:00", home: "Canadá", away: "Bosnia y Herzegovina", group: "B", venue: "Toronto" },
+            { date: "Sábado 13 junio 2026", time: "21:00", home: "Catar", away: "Suiza", group: "B", venue: "San Francisco" },
+            { date: "Jueves 18 junio 2026", time: "21:00", home: "Suiza", away: "Bosnia y Herzegovina", group: "B", venue: "Los Ángeles" },
+            { date: "Viernes 19 junio 2026", time: "00:00", home: "Canadá", away: "Catar", group: "B", venue: "Vancouver" },
+            { date: "Miércoles 24 junio 2026", time: "21:00", home: "Suiza", away: "Canadá", group: "B", venue: "Vancouver" },
+            { date: "Miércoles 24 junio 2026", time: "21:00", home: "Bosnia y Herzegovina", away: "Catar", group: "B", venue: "Seattle" },
+
+            // Grupo C
+            { date: "Domingo 14 junio 2026", time: "00:00", home: "Brasil", away: "Marruecos", group: "C", venue: "Nueva York" },
+            { date: "Domingo 14 junio 2026", time: "03:00", home: "Haití", away: "Escocia", group: "C", venue: "Boston" },
+            { date: "Sábado 20 junio 2026", time: "00:00", home: "Escocia", away: "Marruecos", group: "C", venue: "Boston" },
+            { date: "Sábado 20 junio 2026", time: "02:30", home: "Brasil", away: "Haití", group: "C", venue: "Filadelfia" },
+            { date: "Jueves 25 junio 2026", time: "00:00", home: "Escocia", away: "Brasil", group: "C", venue: "Miami" },
+            { date: "Jueves 25 junio 2026", time: "00:00", home: "Marruecos", away: "Haití", group: "C", venue: "Atlanta" },
+
+            // Grupo D
+            { date: "Sábado 13 junio 2026", time: "03:00", home: "EE. UU.", away: "Paraguay", group: "D", venue: "Los Ángeles" },
+            { date: "Domingo 14 junio 2026", time: "06:00", home: "Australia", away: "Turquía", group: "D", venue: "Vancouver" },
+            { date: "Viernes 19 junio 2026", time: "21:00", home: "EE. UU.", away: "Australia", group: "D", venue: "Seattle" },
+            { date: "Sábado 20 junio 2026", time: "05:00", home: "Turquía", away: "Paraguay", group: "D", venue: "San Francisco" },
+            { date: "Viernes 26 junio 2026", time: "04:00", home: "Turquía", away: "EE. UU.", group: "D", venue: "Los Ángeles" },
+            { date: "Viernes 26 junio 2026", time: "04:00", home: "Paraguay", away: "Australia", group: "D", venue: "San Francisco" },
+
+            // Grupo E
+            { date: "Domingo 14 junio 2026", time: "19:00", home: "Alemania", away: "Curazao", group: "E", venue: "Houston" },
+            { date: "Lunes 15 junio 2026", time: "01:00", home: "Costa de Marfil", away: "Ecuador", group: "E", venue: "Filadelfia" },
+            { date: "Sábado 20 junio 2026", time: "22:00", home: "Alemania", away: "Costa de Marfil", group: "E", venue: "Toronto" },
+            { date: "Domingo 21 junio 2026", time: "02:00", home: "Ecuador", away: "Curazao", group: "E", venue: "Kansas City" },
+            { date: "Jueves 25 junio 2026", time: "22:00", home: "Curazao", away: "Costa de Marfil", group: "E", venue: "Filadelfia" },
+            { date: "Jueves 25 junio 2026", time: "22:00", home: "Ecuador", away: "Alemania", group: "E", venue: "Nueva York" },
+
+            // Grupo F
+            { date: "Domingo 14 junio 2026", time: "22:00", home: "Países Bajos", away: "Japón", group: "F", venue: "Dallas" },
+            { date: "Lunes 15 junio 2026", time: "04:00", home: "Suecia", away: "Túnez", group: "F", venue: "Monterrey" },
+            { date: "Sábado 20 junio 2026", time: "19:00", home: "Países Bajos", away: "Suecia", group: "F", venue: "Houston" },
+            { date: "Domingo 21 junio 2026", time: "06:00", home: "Túnez", away: "Japón", group: "F", venue: "Monterrey" },
+            { date: "Viernes 26 junio 2026", time: "01:00", home: "Japón", away: "Suecia", group: "F", venue: "Dallas" },
+            { date: "Viernes 26 junio 2026", time: "01:00", home: "Túnez", away: "Países Bajos", group: "F", venue: "Kansas City" },
+
+            // Grupo G
+            { date: "Lunes 15 junio 2026", time: "21:00", home: "Bélgica", away: "Egipto", group: "G", venue: "Seattle" },
+            { date: "Martes 16 junio 2026", time: "03:00", home: "RI de Irán", away: "Nueva Zelanda", group: "G", venue: "Los Ángeles" },
+            { date: "Domingo 21 junio 2026", time: "21:00", home: "Bélgica", away: "RI de Irán", group: "G", venue: "Los Ángeles" },
+            { date: "Lunes 22 junio 2026", time: "03:00", home: "Nueva Zelanda", away: "Egipto", group: "G", venue: "Vancouver" },
+            { date: "Sábado 27 junio 2026", time: "05:00", home: "Egipto", away: "RI de Irán", group: "G", venue: "Seattle" },
+            { date: "Sábado 27 junio 2026", time: "05:00", home: "Nueva Zelanda", away: "Bélgica", group: "G", venue: "Vancouver" },
+
+            // Grupo H
+            { date: "Lunes 15 junio 2026", time: "18:00", home: "España", away: "Islas de Cabo Verde", group: "H", venue: "Atlanta" },
+            { date: "Martes 16 junio 2026", time: "00:00", home: "Arabia Saudí", away: "Uruguay", group: "H", venue: "Miami" },
+            { date: "Domingo 21 junio 2026", time: "18:00", home: "España", away: "Arabia Saudí", group: "H", venue: "Atlanta" },
+            { date: "Lunes 22 junio 2026", time: "00:00", home: "Uruguay", away: "Islas de Cabo Verde", group: "H", venue: "Miami" },
+            { date: "Sábado 27 junio 2026", time: "02:00", home: "Islas de Cabo Verde", away: "Arabia Saudí", group: "H", venue: "Houston" },
+            { date: "Sábado 27 junio 2026", time: "02:00", home: "Uruguay", away: "España", group: "H", venue: "Guadalajara" },
+
+            // Grupo I
+            { date: "Martes 16 junio 2026", time: "21:00", home: "Francia", away: "Senegal", group: "I", venue: "Nueva York" },
+            { date: "Miércoles 17 junio 2026", time: "00:00", home: "Irak", away: "Noruega", group: "I", venue: "Boston" },
+            { date: "Lunes 22 junio 2026", time: "23:00", home: "Francia", away: "Irak", group: "I", venue: "Filadelfia" },
+            { date: "Martes 23 junio 2026", time: "02:00", home: "Noruega", away: "Senegal", group: "I", venue: "Nueva York" },
+            { date: "Viernes 26 junio 2026", time: "21:00", home: "Noruega", away: "Francia", group: "I", venue: "Boston" },
+            { date: "Viernes 26 junio 2026", time: "21:00", home: "Senegal", away: "Irak", group: "I", venue: "Toronto" },
+
+            // Grupo J
+            { date: "Miércoles 17 junio 2026", time: "03:00", home: "Argentina", away: "Argelia", group: "J", venue: "Kansas City" },
+            { date: "Miércoles 17 junio 2026", time: "06:00", home: "Austria", away: "Jordania", group: "J", venue: "San Francisco" },
+            { date: "Lunes 22 junio 2026", time: "19:00", home: "Argentina", away: "Austria", group: "J", venue: "Dallas" },
+            { date: "Martes 23 junio 2026", time: "05:00", home: "Jordania", away: "Argelia", group: "J", venue: "San Francisco" },
+            { date: "Domingo 28 junio 2026", time: "04:00", home: "Argelia", away: "Austria", group: "J", venue: "Kansas City" },
+            { date: "Domingo 28 junio 2026", time: "04:00", home: "Jordania", away: "Argentina", group: "J", venue: "Dallas" },
+
+            // Grupo K
+            { date: "Miércoles 17 junio 2026", time: "19:00", home: "Portugal", away: "RD Congo", group: "K", venue: "Houston" },
+            { date: "Jueves 18 junio 2026", time: "04:00", home: "Uzbekistán", away: "Colombia", group: "K", venue: "Ciudad de México" },
+            { date: "Martes 23 junio 2026", time: "19:00", home: "Portugal", away: "Uzbekistán", group: "K", venue: "Houston" },
+            { date: "Miércoles 24 junio 2026", time: "04:00", home: "Colombia", away: "RD Congo", group: "K", venue: "Guadalajara" },
+            { date: "Domingo 28 junio 2026", time: "01:30", home: "Colombia", away: "Portugal", group: "K", venue: "Miami" },
+            { date: "Domingo 28 junio 2026", time: "01:30", home: "RD Congo", away: "Uzbekistán", group: "K", venue: "Atlanta" },
+
+            // Grupo L
+            { date: "Miércoles 17 junio 2026", time: "22:00", home: "Inglaterra", away: "Croacia", group: "L", venue: "Dallas" },
+            { date: "Jueves 18 junio 2026", time: "01:00", home: "Ghana", away: "Panamá", group: "L", venue: "Toronto" },
+            { date: "Martes 23 junio 2026", time: "22:00", home: "Inglaterra", away: "Ghana", group: "L", venue: "Boston" },
+            { date: "Miércoles 24 junio 2026", time: "01:00", home: "Panamá", away: "Croacia", group: "L", venue: "Toronto" },
+            { date: "Sábado 27 junio 2026", time: "23:00", home: "Panamá", away: "Inglaterra", group: "L", venue: "Nueva York" },
+            { date: "Sábado 27 junio 2026", time: "23:00", home: "Croacia", away: "Ghana", group: "L", venue: "Filadelfia" }
+        ];
+
+        // Contraseñas de usuarios
+        const userPasswords = {
+            'PIN': 'misterautopsias',
+            'MIGUEL': 'defraudadordehacienda',
+            'MARTINEZ': 'amantedelvoleibol',
+            'SERGIO': 'cumtributero',
+            'JONATHAN': 'ferrolano69',
+            'QUIROGA': 'elenacandia',
+            'JESUS': 'toreroputero',
+            'PABLO': 'yamalbalondeoro',
+            'PARDO': 'panchitalover',
+            'SOFÍA': 'malaalpadel',
+            'IRIA': 'mujerdelsabado',
+            'MARTA': 'amantedepijas',
+            'ADMIN': 'MARVELDREAMER'
+        };
+
+        // Mapeo de códigos ISO de banderas de países
+        const countryFlags = {
+            'México': 'mx',
+            'Sudáfrica': 'za',
+            'República de Corea': 'kr',
+            'Chequia': 'cz',
+            'Canadá': 'ca',
+            'Bosnia y Herzegovina': 'ba',
+            'Catar': 'qa',
+            'Suiza': 'ch',
+            'Brasil': 'br',
+            'Marruecos': 'ma',
+            'Haití': 'ht',
+            'Escocia': 'gb-sct',
+            'EE. UU.': 'us',
+            'Paraguay': 'py',
+            'Australia': 'au',
+            'Turquía': 'tr',
+            'Alemania': 'de',
+            'Curazao': 'cw',
+            'Costa de Marfil': 'ci',
+            'Ecuador': 'ec',
+            'Países Bajos': 'nl',
+            'Japón': 'jp',
+            'Suecia': 'se',
+            'Túnez': 'tn',
+            'Bélgica': 'be',
+            'Egipto': 'eg',
+            'RI de Irán': 'ir',
+            'Nueva Zelanda': 'nz',
+            'España': 'es',
+            'Islas de Cabo Verde': 'cv',
+            'Arabia Saudí': 'sa',
+            'Uruguay': 'uy',
+            'Francia': 'fr',
+            'Senegal': 'sn',
+            'Irak': 'iq',
+            'Noruega': 'no',
+            'Argentina': 'ar',
+            'Argelia': 'dz',
+            'Austria': 'at',
+            'Jordania': 'jo',
+            'Portugal': 'pt',
+            'RD Congo': 'cd',
+            'Uzbekistán': 'uz',
+            'Colombia': 'co',
+            'Inglaterra': 'gb-eng',
+            'Croacia': 'hr',
+            'Ghana': 'gh',
+            'Panamá': 'pa'
+        };
+
+        let currentUser = '';
+        let userBets = {};
+        let matchResults = {}; // Resultados reales de los partidos
+        let isLoggedIn = false;
+        let isBlocked = false;
+        
+        // Audios para equipos especiales
+        let audiosPanch = null;
+        let audiosEspana = null;
+        const equiposPanch = ['México', 'Paraguay', 'Ecuador', 'Colombia', 'Panamá'];
+        const equiposEspana = ['España'];
+        
+        // Inicializar audios
+        function initAudios() {
+            audiosPanch = new Audio('panch.wav');
+            audiosPanch.preload = 'auto';
+            audiosPanch.volume = 1.0;
+            
+            audiosEspana = new Audio('espana.wav');
+            audiosEspana.preload = 'auto';
+            audiosEspana.volume = 1.0;
+        }
+        
+        // Reproducir audio con reset
+        function playAudio(audio) {
+            if (!audio) return;
+            audio.currentTime = 0;
+            audio.play().catch(e => {
+                console.log('Audio bloqueado por el navegador:', e);
+                // Intentar de nuevo después de un click del usuario
+                document.addEventListener('click', function retryAudio() {
+                    audio.currentTime = 0;
+                    audio.play().catch(err => console.log('Audio aún bloqueado'));
+                    document.removeEventListener('click', retryAudio);
+                }, { once: true });
+            });
+        }
+
+        // Mapeo de usuarios a sus fotos
+        const userPhotos = {
+            'PIN': 'foto_pin.jpg',
+            'MIGUEL': 'foto_miguel.jpg',
+            'MARTINEZ': 'foto_martinez.jpg',
+            'SERGIO': 'foto_sergio.jpg',
+            'JONATHAN': 'foto_jonathan.jpg',
+            'QUIROGA': 'foto_quiroga.jpg',
+            'PABLO': 'foto_pablo.png',
+            'PARDO': 'foto_pardo.jpg',
+            'SOFÍA': 'foto_sofia.jpg',
+            'IRIA': 'foto_iria.jpg',
+            'JESUS': 'foto_jesus.jpg',
+            'MARTA': 'foto_marta.jpg'
+        };
+
+        // Función para actualizar la foto de perfil del usuario
+        function updateUserPhoto(username) {
+            const photoElement = document.getElementById('userProfilePhoto');
+            const photoPath = userPhotos[username];
+            
+            if (photoPath) {
+                photoElement.src = photoPath;
+                photoElement.classList.add('visible');
+            } else {
+                photoElement.classList.remove('visible');
+            }
+        }
+
+        // Función auxiliar para mostrar equipo con bandera
+        function getTeamDisplay(teamName) {
+            const countryCode = countryFlags[teamName];
+            if (countryCode) {
+                return `<img src="https://flagcdn.com/40x30/${countryCode}.png" 
+                            srcset="https://flagcdn.com/80x60/${countryCode}.png 2x, 
+                                    https://flagcdn.com/120x90/${countryCode}.png 3x" 
+                            width="40" 
+                            height="30" 
+                            alt="${teamName}" 
+                            class="country-flag"> ${teamName}`;
+            }
+            return teamName;
+        }
+
+        // Login
+        function login(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('loginUser').value;
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            const errorDiv = document.getElementById('loginError');
+            
+            if (userPasswords[username] === password) {
+                // Guardar sesión si se marca "recordarme"
+                if (rememberMe) {
+                    localStorage.setItem('rememberedUser', username);
+                    localStorage.setItem('rememberedPassword', password);
+                }
+                
+                currentUser = username;
+                isLoggedIn = true;
+                
+                // Mostrar aplicación y ocultar login
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                
+                // Actualizar interfaz
+                document.getElementById('currentUserName').textContent = username;
+                updateUserPhoto(username);
+                
+                if (username === 'ADMIN') {
+                    document.getElementById('saveBetsBtn').textContent = 'Guardar Resultados';
+                } else {
+                    document.getElementById('saveBetsBtn').textContent = 'Guardar Apuestas';
+                }
+                
+                // Agregar estado al historial para manejar botón atrás
+                history.pushState({ page: 'app' }, '', '');
+                
+                renderMatches();
+                errorDiv.style.display = 'none';
+            } else {
+                errorDiv.style.display = 'block';
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+
+        // Logout
+        function logout() {
+            currentUser = '';
+            isLoggedIn = false;
+            
+            // Eliminar sesión guardada
+            localStorage.removeItem('rememberedUser');
+            localStorage.removeItem('rememberedPassword');
+            
+            // Ocultar aplicación y mostrar login
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            
+            // Ocultar foto de perfil
+            document.getElementById('userProfilePhoto').classList.remove('visible');
+            
+            // Limpiar formulario
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('rememberMe').checked = false;
+            document.getElementById('loginError').style.display = 'none';
+            
+            // Limpiar contenedor
+            document.getElementById('matchesContainer').innerHTML = '';
+        }
+
+        // Auto-login si hay sesión guardada
+        function attemptAutoLogin() {
+            const savedUser = localStorage.getItem('rememberedUser');
+            const savedPassword = localStorage.getItem('rememberedPassword');
+            
+            if (savedUser && savedPassword && userPasswords[savedUser] === savedPassword) {
+                currentUser = savedUser;
+                isLoggedIn = true;
+                
+                // Mostrar aplicación y ocultar login
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                
+                // Actualizar interfaz
+                document.getElementById('currentUserName').textContent = savedUser;
+                updateUserPhoto(savedUser);
+                
+                if (savedUser === 'ADMIN') {
+                    document.getElementById('saveBetsBtn').textContent = 'Guardar Resultados';
+                } else {
+                    document.getElementById('saveBetsBtn').textContent = 'Guardar Apuestas';
+                }
+                
+                // Agregar estado al historial para manejar botón atrás
+                history.pushState({ page: 'app' }, '', '');
+                
+                renderMatches();
+            }
+        }
+
+        // Cargar apuestas del localStorage al iniciar
+        function loadBets() {
+            const saved = localStorage.getItem('mundialBets');
+            if (saved) {
+                userBets = JSON.parse(saved);
+            }
+            const savedResults = localStorage.getItem('matchResults');
+            if (savedResults) {
+                matchResults = JSON.parse(savedResults);
+            }
+            // Verificar si el usuario está bloqueado
+            const blockedStatus = localStorage.getItem('userBlocked');
+            if (blockedStatus === 'true') {
+                isBlocked = true;
+                showCheatModal();
+            }
+        }
+
+        // Renderizar partidos
+        function renderMatches() {
+            const container = document.getElementById('matchesContainer');
+            container.innerHTML = '';
+
+            const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+            const isAdmin = currentUser === 'ADMIN';
+            
+            groups.forEach(group => {
+                const groupMatches = matches.filter(m => m.group === group);
+                
+                const groupSection = document.createElement('div');
+                groupSection.className = 'group-section';
+                groupSection.innerHTML = `<div class="group-header">Grupo ${group}</div>`;
+                
+                let currentDate = '';
+                groupMatches.forEach((match, index) => {
+                    const matchId = `${match.home}-${match.away}`.replace(/\s+/g, '-');
+                    
+                    if (match.date !== currentDate) {
+                        currentDate = match.date;
+                        const dateDiv = document.createElement('div');
+                        dateDiv.className = 'match-date';
+                        dateDiv.textContent = match.date;
+                        groupSection.appendChild(dateDiv);
+                    }
+                    
+                    const matchCard = document.createElement('div');
+                    matchCard.className = 'match-card';
+                    
+                    if (isAdmin) {
+                        // Vista ADMIN - introducir resultados
+                        const result = matchResults[matchId] || { home: '', away: '' };
+                        const hasResult = result.home !== '' && result.away !== '';
+                        matchCard.className += hasResult ? ' result-saved' : ' admin-mode';
+                        
+                        matchCard.innerHTML = `
+                            <div class="match-info">
+                                <div class="match-teams">${getTeamDisplay(match.home)} vs ${getTeamDisplay(match.away)}</div>
+                                <div class="match-details">
+                                    <span class="match-time">${match.time}</span> | 
+                                    ${match.venue} | Grupo ${match.group}
+                                </div>
+                            </div>
+                            <div class="admin-result">
+                                <input type="number" min="0" max="20" id="home-${matchId}" 
+                                       value="${result.home}" placeholder="0">
+                                <span>-</span>
+                                <input type="number" min="0" max="20" id="away-${matchId}" 
+                                       value="${result.away}" placeholder="0">
+                                <button class="save-result-btn" onclick="saveMatchResult('${matchId}', '${match.home}', '${match.away}', '${match.group}')">
+                                    ${hasResult ? 'Guardado' : 'Guardar'}
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        // Vista USUARIO - hacer apuestas
+                        const userBet = userBets[currentUser]?.[matchId] || '';
+                        const result = matchResults[matchId];
+                        let resultDisplay = '';
+                        
+                        if (result && result.home !== '' && result.away !== '') {
+                            resultDisplay = `<span class="match-result-display">(${result.home}-${result.away})</span>`;
+                        }
+                        
+                        matchCard.innerHTML = `
+                            <div class="match-info">
+                                <div class="match-teams">${getTeamDisplay(match.home)} vs ${getTeamDisplay(match.away)} ${resultDisplay}</div>
+                                <div class="match-details">
+                                    <span class="match-time">${match.time}</span> | 
+                                    ${match.venue} | Grupo ${match.group}
+                                </div>
+                            </div>
+                            <div class="bet-options">
+                                <button class="bet-button ${userBet === '1' ? 'selected-1' : ''}" 
+                                        onclick="placeBet('${matchId}', '1')">1</button>
+                                <button class="bet-button ${userBet === 'X' ? 'selected-X' : ''}" 
+                                        onclick="placeBet('${matchId}', 'X')">X</button>
+                                <button class="bet-button ${userBet === '2' ? 'selected-2' : ''}" 
+                                        onclick="placeBet('${matchId}', '2')">2</button>
+                            </div>
+                        `;
+                    }
+                    
+                    groupSection.appendChild(matchCard);
+                });
+                
+                container.appendChild(groupSection);
+            });
+        }
+
+        // Hacer apuesta
+        function placeBet(matchId, bet) {
+            if (!isLoggedIn || !currentUser) {
+                alert('Por favor, inicia sesión primero');
+                return;
+            }
+            
+            if (isBlocked) {
+                return;
+            }
+            
+            // Validar que el partido no haya comenzado
+            const match = matches.find(m => `${m.home}-${m.away}`.replace(/\s+/g, '-') === matchId);
+            if (match) {
+                const matchDateTime = parseMatchDateTime(match.date, match.time);
+                const now = new Date();
+                
+                if (now >= matchDateTime) {
+                    // BLOQUEAR AL TRAMPOSO
+                    isBlocked = true;
+                    localStorage.setItem('userBlocked', 'true');
+                    showCheatModal();
+                    return;
+                }
+            }
+            
+            if (!userBets[currentUser]) {
+                userBets[currentUser] = {};
+            }
+            
+            // Reproducir audio según la apuesta
+            if (match) {
+                if (bet === '1') {
+                    // Local gana
+                    if (equiposPanch.includes(match.home)) {
+                        playAudio(audiosPanch);
+                    } else if (equiposEspana.includes(match.home)) {
+                        playAudio(audiosEspana);
+                    }
+                } else if (bet === '2') {
+                    // Visitante gana
+                    if (equiposPanch.includes(match.away)) {
+                        playAudio(audiosPanch);
+                    } else if (equiposEspana.includes(match.away)) {
+                        playAudio(audiosEspana);
+                    }
+                }
+            }
+            
+            userBets[currentUser][matchId] = bet;
+            renderMatches();
+        }
+        
+        // Mostrar modal de bloqueo
+        function showCheatModal() {
+            document.getElementById('cheatModal').style.display = 'block';
+            document.getElementById('unlockInput').value = '';
+            document.getElementById('unlockError').style.display = 'none';
+        }
+        
+        // Intentar desbloquear
+        function attemptUnlock() {
+            const input = document.getElementById('unlockInput').value.trim();
+            const correctPhrase = 'SOY MARICON Y NO ME DA MIEDO DECIRLO';
+            
+            if (input === correctPhrase) {
+                isBlocked = false;
+                localStorage.removeItem('userBlocked');
+                document.getElementById('cheatModal').style.display = 'none';
+                alert('✅ Has sido desbloqueado. Recuerda: ¡No hagas trampa!');
+            } else {
+                document.getElementById('unlockError').style.display = 'block';
+                document.getElementById('unlockInput').value = '';
+                document.getElementById('unlockInput').focus();
+            }
+        }
+        
+        // Permitir desbloquear con Enter
+        document.addEventListener('DOMContentLoaded', function() {
+            const unlockInput = document.getElementById('unlockInput');
+            if (unlockInput) {
+                unlockInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        attemptUnlock();
+                    }
+                });
+            }
+        });
+        
+        // Función auxiliar para parsear fecha y hora de partido
+        function parseMatchDateTime(dateStr, timeStr) {
+            // Convertir formato español a fecha JS
+            const months = {
+                'enero': 0, 'febrero': 1, 'marzo': 2, 'abril': 3, 'mayo': 4, 'junio': 5,
+                'julio': 6, 'agosto': 7, 'septiembre': 8, 'octubre': 9, 'noviembre': 10, 'diciembre': 11
+            };
+            
+            // Extraer día y mes de "Jueves 11 junio 2026"
+            const parts = dateStr.split(' ');
+            const day = parseInt(parts[1]);
+            const monthName = parts[2].toLowerCase();
+            const year = parseInt(parts[3]);
+            const month = months[monthName];
+            
+            // Extraer hora y minutos de "21:00"
+            const [hours, minutes] = timeStr.split(':').map(n => parseInt(n));
+            
+            return new Date(year, month, day, hours, minutes);
+        }
+
+        // Guardar apuestas o resultados
+        function saveBets() {
+            if (!isLoggedIn || !currentUser) {
+                alert('Por favor, inicia sesión primero');
+                return;
+            }
+            
+            if (currentUser === 'ADMIN') {
+                // Guardar resultados
+                localStorage.setItem('matchResults', JSON.stringify(matchResults));
+            } else {
+                // Guardar apuestas
+                localStorage.setItem('mundialBets', JSON.stringify(userBets));
+            }
+            
+            const message = document.getElementById('saveMessage');
+            message.textContent = currentUser === 'ADMIN' ? 'Resultados guardados correctamente' : 'Apuestas guardadas correctamente';
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+        }
+
+        // Guardar resultado de un partido (ADMIN)
+        function saveMatchResult(matchId, homeTeam, awayTeam, group) {
+            const homeGoals = parseInt(document.getElementById(`home-${matchId}`).value) || 0;
+            const awayGoals = parseInt(document.getElementById(`away-${matchId}`).value) || 0;
+            
+            matchResults[matchId] = {
+                home: homeGoals,
+                away: awayGoals,
+                homeTeam: homeTeam,
+                awayTeam: awayTeam,
+                group: group
+            };
+            
+            localStorage.setItem('matchResults', JSON.stringify(matchResults));
+            renderMatches();
+            
+            const message = document.getElementById('saveMessage');
+            message.textContent = 'Resultado guardado';
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 2000);
+        }
+
+        // Determinar resultado del partido (1, X, 2)
+        function getMatchOutcome(homeGoals, awayGoals) {
+            if (homeGoals > awayGoals) return '1';
+            if (homeGoals < awayGoals) return '2';
+            return 'X';
+        }
+
+        // Calcular puntos de un usuario
+        function calculateUserScore(username) {
+            if (!userBets[username]) return 0;
+            
+            let score = 0;
+            for (const matchId in matchResults) {
+                const result = matchResults[matchId];
+                if (result.home === '' || result.away === '') continue;
+                
+                const actualOutcome = getMatchOutcome(result.home, result.away);
+                const userBet = userBets[username]?.[matchId];
+                
+                if (userBet === actualOutcome) {
+                    score++;
+                }
+            }
+            
+            return score;
+        }
+
+        // Calcular clasificación de un grupo
+        function calculateGroupStandings(groupLetter) {
+            const groupMatches = matches.filter(m => m.group === groupLetter);
+            const teams = {};
+            
+            // Inicializar equipos
+            groupMatches.forEach(match => {
+                if (!teams[match.home]) {
+                    teams[match.home] = { 
+                        name: match.home, 
+                        points: 0, 
+                        played: 0, 
+                        won: 0, 
+                        drawn: 0, 
+                        lost: 0, 
+                        gf: 0, 
+                        ga: 0, 
+                        gd: 0 
+                    };
+                }
+                if (!teams[match.away]) {
+                    teams[match.away] = { 
+                        name: match.away, 
+                        points: 0, 
+                        played: 0, 
+                        won: 0, 
+                        drawn: 0, 
+                        lost: 0, 
+                        gf: 0, 
+                        ga: 0, 
+                        gd: 0 
+                    };
+                }
+            });
+            
+            // Calcular estadísticas basadas en resultados reales
+            groupMatches.forEach(match => {
+                const matchId = `${match.home}-${match.away}`.replace(/\s+/g, '-');
+                const result = matchResults[matchId];
+                
+                if (result && result.home !== '' && result.away !== '') {
+                    const homeGoals = parseInt(result.home);
+                    const awayGoals = parseInt(result.away);
+                    
+                    teams[match.home].played++;
+                    teams[match.away].played++;
+                    teams[match.home].gf += homeGoals;
+                    teams[match.home].ga += awayGoals;
+                    teams[match.away].gf += awayGoals;
+                    teams[match.away].ga += homeGoals;
+                    
+                    if (homeGoals > awayGoals) {
+                        teams[match.home].points += 3;
+                        teams[match.home].won++;
+                        teams[match.away].lost++;
+                    } else if (homeGoals < awayGoals) {
+                        teams[match.away].points += 3;
+                        teams[match.away].won++;
+                        teams[match.home].lost++;
+                    } else {
+                        teams[match.home].points += 1;
+                        teams[match.away].points += 1;
+                        teams[match.home].drawn++;
+                        teams[match.away].drawn++;
+                    }
+                }
+            });
+            
+            // Calcular diferencia de goles
+            Object.values(teams).forEach(team => {
+                team.gd = team.gf - team.ga;
+            });
+            
+            // Ordenar por puntos, diferencia de goles, goles a favor
+            const standings = Object.values(teams).sort((a, b) => {
+                if (b.points !== a.points) return b.points - a.points;
+                if (b.gd !== a.gd) return b.gd - a.gd;
+                return b.gf - a.gf;
+            });
+            
+            return standings;
+        }
+
+        // Ver todas las apuestas
+        function viewAllBets() {
+            const modal = document.getElementById('summaryModal');
+            const statsContainer = document.getElementById('statsContainer');
+            const tableContainer = document.getElementById('summaryTableContainer');
+            
+            // Calcular estadísticas
+            const users = ['PIN', 'MIGUEL', 'MARTINEZ', 'SERGIO', 'JONATHAN', 'QUIROGA', 'JESUS', 'PABLO', 'PARDO', 'SOFÍA', 'IRIA', 'MARTA'];
+            const totalMatches = matches.length;
+            
+            let statsHTML = '';
+            users.forEach(user => {
+                const userBetsCount = userBets[user] ? Object.keys(userBets[user]).length : 0;
+                const percentage = ((userBetsCount / totalMatches) * 100).toFixed(0);
+                statsHTML += `
+                    <div class="stat-card">
+                        <h3>${userBetsCount}/${totalMatches}</h3>
+                        <p>${user} (${percentage}%)</p>
+                    </div>
+                `;
+            });
+            statsContainer.innerHTML = statsHTML;
+            
+            // Crear tabla
+            let tableHTML = '<table class="summary-table"><thead><tr><th>Partido</th>';
+            users.forEach(user => {
+                tableHTML += `<th>${user}</th>`;
+            });
+            tableHTML += '</tr></thead><tbody>';
+            
+            matches.forEach(match => {
+                const matchId = `${match.home}-${match.away}`.replace(/\s+/g, '-');
+                tableHTML += `<tr><td style="text-align: left;"><strong>${getTeamDisplay(match.home)} vs ${getTeamDisplay(match.away)}</strong><br><small>${match.date}</small></td>`;
+                
+                users.forEach(user => {
+                    const bet = userBets[user]?.[matchId] || '-';
+                    const betClass = bet !== '-' ? `bet-${bet}` : '';
+                    tableHTML += `<td class="${betClass}">${bet}</td>`;
+                });
+                
+                tableHTML += '</tr>';
+            });
+            
+            tableHTML += '</tbody></table>';
+            tableContainer.innerHTML = tableHTML;
+            
+            modal.style.display = 'block';
+        }
+
+        // Cerrar modal
+        function closeSummary() {
+            document.getElementById('summaryModal').style.display = 'none';
+        }
+
+        // Ver clasificación de grupos
+        function viewStandings() {
+            const modal = document.getElementById('summaryModal');
+            const statsContainer = document.getElementById('statsContainer');
+            const tableContainer = document.getElementById('summaryTableContainer');
+            
+            statsContainer.innerHTML = '<h2>🏆 Clasificación de Grupos</h2>';
+            
+            let tablesHTML = '';
+            const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+            
+            groups.forEach(group => {
+                const standings = calculateGroupStandings(group);
+                
+                tablesHTML += `
+                    <div class="group-section">
+                        <div class="group-header">Grupo ${group}</div>
+                        <table class="standings-table">
+                            <thead>
+                                <tr>
+                                    <th>Equipo</th>
+                                    <th>PJ</th>
+                                    <th>PG</th>
+                                    <th>PE</th>
+                                    <th>PP</th>
+                                    <th>GF</th>
+                                    <th>GC</th>
+                                    <th>DG</th>
+                                    <th>Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                standings.forEach((team, index) => {
+                    const rowClass = index < 2 ? 'qualified' : '';
+                    const countryCode = countryFlags[team.name];
+                    const flagHTML = countryCode ? `<img src="https://flagcdn.com/24x18/${countryCode}.png" srcset="https://flagcdn.com/48x36/${countryCode}.png 2x, https://flagcdn.com/72x54/${countryCode}.png 3x" width="24" height="18" alt="${team.name}" style="display: inline-block; vertical-align: middle; margin-right: 6px; border-radius: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);"> ` : '';
+                    tablesHTML += `
+                        <tr class="${rowClass}">
+                            <td>${index + 1}. ${flagHTML}${team.name}</td>
+                            <td>${team.played}</td>
+                            <td>${team.won}</td>
+                            <td>${team.drawn}</td>
+                            <td>${team.lost}</td>
+                            <td>${team.gf}</td>
+                            <td>${team.ga}</td>
+                            <td>${team.gd > 0 ? '+' : ''}${team.gd}</td>
+                            <td><strong>${team.points}</strong></td>
+                        </tr>
+                    `;
+                });
+                
+                tablesHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            });
+            
+            tableContainer.innerHTML = tablesHTML;
+            modal.style.display = 'block';
+        }
+
+        // Obtener los 8 mejores terceros
+        function getBestThirds(allThirds) {
+            return allThirds.sort((a, b) => {
+                if (b.points !== a.points) return b.points - a.points;
+                if (b.gd !== a.gd) return b.gd - a.gd;
+                return b.gf - a.gf;
+            }).slice(0, 8);
+        }
+        
+        // Calcular equipos clasificados a dieciseisavos
+        function calculateQualifiedTeams() {
+            const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+            const qualified = {
+                first: {},
+                second: {},
+                thirds: []
+            };
+            
+            groups.forEach(group => {
+                const standings = calculateGroupStandings(group);
+                if (standings.length >= 3) {
+                    qualified.first[group] = standings[0];
+                    qualified.second[group] = standings[1];
+                    qualified.thirds.push({...standings[2], group: group});
+                }
+            });
+            
+            // Obtener los 8 mejores terceros
+            qualified.bestThirds = getBestThirds(qualified.thirds);
+            
+            return qualified;
+        }
+        
+        // Generar cuadro de eliminatorias
+        function generateBracket(qualified) {
+            const roundOf16 = [
+                { id: 73, team1: qualified.second['A']?.name || 'TBD', team2: qualified.second['B']?.name || 'TBD', label: '2ºA vs 2ºB' },
+                { id: 74, team1: qualified.first['E']?.name || 'TBD', team2: qualified.bestThirds[0]?.name || 'TBD', label: '1ºE vs 3º(A/B/C/D/F)' },
+                { id: 75, team1: qualified.first['F']?.name || 'TBD', team2: qualified.second['C']?.name || 'TBD', label: '1ºF vs 2ºC' },
+                { id: 76, team1: qualified.first['E']?.name || 'TBD', team2: qualified.second['F']?.name || 'TBD', label: '1ºE vs 2ºF' },
+                { id: 77, team1: qualified.first['I']?.name || 'TBD', team2: qualified.bestThirds[1]?.name || 'TBD', label: '1ºI vs 3º(C/D/F/G/H)' },
+                { id: 78, team1: qualified.second['E']?.name || 'TBD', team2: qualified.second['I']?.name || 'TBD', label: '2ºE vs 2ºI' },
+                { id: 79, team1: qualified.first['A']?.name || 'TBD', team2: qualified.bestThirds[2]?.name || 'TBD', label: '1ºA vs 3º(C/E/F/H/I)' },
+                { id: 80, team1: qualified.first['L']?.name || 'TBD', team2: qualified.bestThirds[3]?.name || 'TBD', label: '1ºL vs 3º(E/H/I/J/K)' },
+                { id: 81, team1: qualified.first['D']?.name || 'TBD', team2: qualified.bestThirds[4]?.name || 'TBD', label: '1ºD vs 3º(B/E/F/I/J)' },
+                { id: 82, team1: qualified.first['G']?.name || 'TBD', team2: qualified.bestThirds[5]?.name || 'TBD', label: '1ºG vs 3º(A/E/H/I/J)' },
+                { id: 83, team1: qualified.second['K']?.name || 'TBD', team2: qualified.second['L']?.name || 'TBD', label: '2ºK vs 2ºL' },
+                { id: 84, team1: qualified.first['H']?.name || 'TBD', team2: qualified.second['J']?.name || 'TBD', label: '1ºH vs 2ºJ' },
+                { id: 85, team1: qualified.first['B']?.name || 'TBD', team2: qualified.bestThirds[6]?.name || 'TBD', label: '1ºB vs 3º(E/F/G/I/J)' },
+                { id: 86, team1: qualified.first['J']?.name || 'TBD', team2: qualified.second['H']?.name || 'TBD', label: '1ºJ vs 2ºH' },
+                { id: 87, team1: qualified.first['K']?.name || 'TBD', team2: qualified.bestThirds[7]?.name || 'TBD', label: '1ºK vs 3º(D/E/I/J/L)' },
+                { id: 88, team1: qualified.second['D']?.name || 'TBD', team2: qualified.second['G']?.name || 'TBD', label: '2ºD vs 2ºG' }
+            ];
+            
+            return roundOf16;
+        }
+        
+        // Ver cuadros de eliminatorias
+        function viewBrackets() {
+            const modal = document.getElementById('summaryModal');
+            const statsContainer = document.getElementById('statsContainer');
+            const tableContainer = document.getElementById('summaryTableContainer');
+            
+            statsContainer.innerHTML = '<h2>🏆 Cuadro de Dieciseisavos de Final</h2>';
+            
+            const qualified = calculateQualifiedTeams();
+            const bracket = generateBracket(qualified);
+            
+            let bracketsHTML = `
+                <div style="margin-bottom: 30px;">
+                    <h3 style="text-align: center; color: #2d3748; margin-bottom: 20px;">📋 Equipos Clasificados</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <div style="background: #c6f6d5; padding: 20px; border-radius: 10px; border: 2px solid #48bb78;">
+                            <h4 style="color: #2d5016; margin-bottom: 10px;">🥇 Primeros de Grupo (12)</h4>
+                            <ul style="list-style: none; padding: 0;">
+            `;
+            
+            ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'].forEach(group => {
+                const team = qualified.first[group];
+                if (team) {
+                    bracketsHTML += `<li style="padding: 5px 0; font-weight: 600;">🏆 ${group}: ${team.name} (${team.points} pts)</li>`;
+                }
+            });
+            
+            bracketsHTML += `
+                            </ul>
+                        </div>
+                        <div style="background: #bee3f8; padding: 20px; border-radius: 10px; border: 2px solid #4299e1;">
+                            <h4 style="color: #1a365d; margin-bottom: 10px;">🥈 Segundos de Grupo (12)</h4>
+                            <ul style="list-style: none; padding: 0;">
+            `;
+            
+            ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'].forEach(group => {
+                const team = qualified.second[group];
+                if (team) {
+                    bracketsHTML += `<li style="padding: 5px 0; font-weight: 600;">🥈 ${group}: ${team.name} (${team.points} pts)</li>`;
+                }
+            });
+            
+            bracketsHTML += `
+                            </ul>
+                        </div>
+                        <div style="background: #feebc8; padding: 20px; border-radius: 10px; border: 2px solid #ed8936;">
+                            <h4 style="color: #7c2d12; margin-bottom: 10px;">🥉 Mejores Terceros (8)</h4>
+                            <ul style="list-style: none; padding: 0;">
+            `;
+            
+            qualified.bestThirds.forEach((team, index) => {
+                bracketsHTML += `<li style="padding: 5px 0; font-weight: 600;">${index + 1}. ${team.name} - Grupo ${team.group} (${team.points} pts, +${team.gd})</li>`;
+            });
+            
+            bracketsHTML += `
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h3 style="text-align: center; color: #2d3748; margin: 30px 0 20px 0;">⚔️ Dieciseisavos de Final</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 15px;">
+            `;
+            
+            bracket.forEach(match => {
+                const isTBD = match.team1 === 'TBD' || match.team2 === 'TBD';
+                const bgColor = isTBD ? '#f7fafc' : '#ffffff';
+                bracketsHTML += `
+                    <div style="background: ${bgColor}; border: 2px solid #cbd5e0; border-radius: 8px; padding: 15px; transition: all 0.2s;">
+                        <div style="font-size: 0.85em; color: #718096; margin-bottom: 8px; font-weight: 600;">
+                            Partido ${match.id} - ${match.label}
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.1em; font-weight: 700;">
+                            <span style="color: ${match.team1 === 'TBD' ? '#a0aec0' : '#2d3748'};">${match.team1}</span>
+                            <span style="color: #e53e3e; font-size: 1.3em;">VS</span>
+                            <span style="color: ${match.team2 === 'TBD' ? '#a0aec0' : '#2d3748'};">${match.team2}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            bracketsHTML += `
+                    </div>
+                </div>
+            `;
+            
+            tableContainer.innerHTML = bracketsHTML;
+            modal.style.display = 'block';
+        }
+        
+        // Ver puntuación de usuarios
+        function viewUserScores() {
+            const modal = document.getElementById('summaryModal');
+            const statsContainer = document.getElementById('statsContainer');
+            const tableContainer = document.getElementById('summaryTableContainer');
+            
+            const users = ['PIN', 'MIGUEL', 'MARTINEZ', 'SERGIO', 'JONATHAN', 'QUIROGA', 'JESUS', 'PABLO', 'PARDO', 'SOFÍA', 'IRIA', 'MARTA'];
+            
+            // Calcular puntuaciones
+            const userScores = users.map(user => ({
+                name: user,
+                score: calculateUserScore(user),
+                bets: userBets[user] ? Object.keys(userBets[user]).length : 0
+            })).sort((a, b) => b.score - a.score);
+            
+            // Contar partidos con resultado
+            const completedMatches = Object.keys(matchResults).filter(
+                matchId => matchResults[matchId].home !== '' && matchResults[matchId].away !== ''
+            ).length;
+            
+            statsContainer.innerHTML = `
+                <h2>👥 Puntuación de Usuarios</h2>
+                <p style="text-align: center; font-size: 1.1em; margin-top: 10px;">
+                    Partidos con resultado: <strong>${completedMatches}</strong> / ${matches.length}
+                </p>
+            `;
+            
+            let tableHTML = `
+                <table class="user-scores-table">
+                    <thead>
+                        <tr>
+                            <th>Posición</th>
+                            <th>Usuario</th>
+                            <th>Puntos</th>
+                            <th>Apuestas realizadas</th>
+                            <th>% Acierto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            userScores.forEach((user, index) => {
+                const percentage = completedMatches > 0 ? ((user.score / completedMatches) * 100).toFixed(1) : '0.0';
+                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+                
+                tableHTML += `
+                    <tr>
+                        <td>${medal} ${index + 1}</td>
+                        <td>${user.name}</td>
+                        <td><strong style="font-size: 1.3em; color: #667eea;">${user.score}</strong></td>
+                        <td>${user.bets} / ${matches.length}</td>
+                        <td>${percentage}%</td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            tableContainer.innerHTML = tableHTML;
+            modal.style.display = 'block';
+        }
+
+        // Cerrar modal al hacer click fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('summaryModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Manejar navegación del navegador (botón atrás)
+        window.addEventListener('popstate', function(event) {
+            // Si está logueado, cerrar sesión y volver al login
+            if (isLoggedIn) {
+                logout();
+                // Prevenir que el navegador cierre la página
+                history.pushState({ page: 'login' }, '', '');
+            }
+        });
+
+        // Inicializar
+        initAudios();
+        loadBets();
+        attemptAutoLogin();
+        
+        // Establecer estado inicial del historial
+        history.pushState({ page: 'login' }, '', '');
+    </script>
+</body>
+</html>
