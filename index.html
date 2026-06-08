@@ -1097,6 +1097,13 @@
         let isLoggedIn = false;
         let isBlocked = false;
         
+        // Configuración de almacenamiento en la nube
+        // IMPORTANTE: Reemplaza esto con tu propia API Key de JSONBin.io (https://jsonbin.io)
+        // Es GRATUITO, solo necesitas crear una cuenta y obtener tu API key
+        const JSONBIN_API_KEY = '$2a$10$YOUR_API_KEY_HERE'; // Reemplaza con tu API key
+        const JSONBIN_BIN_ID = 'YOUR_BIN_ID_HERE'; // Reemplaza con tu Bin ID
+        const USE_CLOUD_STORAGE = false; // Cambia a true cuando tengas tu API key
+        
         // Audios para equipos especiales
         let audiosPanch = null;
         let audiosEspana = null;
@@ -1274,8 +1281,49 @@
             }
         }
 
-        // Cargar apuestas del localStorage al iniciar
-        function loadBets() {
+        // Cargar apuestas desde la nube o localStorage
+        async function loadBets() {
+            if (USE_CLOUD_STORAGE && JSONBIN_BIN_ID !== 'YOUR_BIN_ID_HERE') {
+                try {
+                    // Intentar cargar desde la nube
+                    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                        headers: {
+                            'X-Master-Key': JSONBIN_API_KEY
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        userBets = data.record.userBets || {};
+                        matchResults = data.record.matchResults || {};
+                        
+                        // Sincronizar con localStorage como backup
+                        localStorage.setItem('mundialBets', JSON.stringify(userBets));
+                        localStorage.setItem('matchResults', JSON.stringify(matchResults));
+                        
+                        console.log('✅ Datos cargados desde la nube');
+                    } else {
+                        throw new Error('Error al cargar desde la nube');
+                    }
+                } catch (error) {
+                    console.log('⚠️ No se pudo cargar desde la nube, usando localStorage', error);
+                    loadFromLocalStorage();
+                }
+            } else {
+                // Usar localStorage como fuente principal
+                loadFromLocalStorage();
+            }
+            
+            // Verificar si el usuario está bloqueado
+            const blockedStatus = localStorage.getItem('userBlocked');
+            if (blockedStatus === 'true') {
+                isBlocked = true;
+                showCheatModal();
+            }
+        }
+        
+        // Cargar desde localStorage
+        function loadFromLocalStorage() {
             const saved = localStorage.getItem('mundialBets');
             if (saved) {
                 userBets = JSON.parse(saved);
@@ -1283,12 +1331,6 @@
             const savedResults = localStorage.getItem('matchResults');
             if (savedResults) {
                 matchResults = JSON.parse(savedResults);
-            }
-            // Verificar si el usuario está bloqueado
-            const blockedStatus = localStorage.getItem('userBlocked');
-            if (blockedStatus === 'true') {
-                isBlocked = true;
-                showCheatModal();
             }
         }
 
@@ -1433,7 +1475,26 @@
             }
             
             userBets[currentUser][matchId] = bet;
+            
+            // Guardar automáticamente
+            saveToCloud();
+            
             renderMatches();
+            
+            // Mostrar mensaje de guardado automático
+            showAutoSaveMessage();
+        }
+        
+        // Mostrar mensaje de guardado automático
+        function showAutoSaveMessage() {
+            const message = document.getElementById('saveMessage');
+            message.textContent = '✓ Guardado';
+            message.style.display = 'block';
+            message.style.opacity = '0.8';
+            setTimeout(() => {
+                message.style.display = 'none';
+                message.style.opacity = '1';
+            }, 1000);
         }
         
         // Mostrar modal de bloqueo
@@ -1493,20 +1554,45 @@
             return new Date(year, month, day, hours, minutes);
         }
 
-        // Guardar apuestas o resultados
+        // Guardar a la nube y localStorage
+        async function saveToCloud() {
+            // Siempre guardar en localStorage como backup
+            localStorage.setItem('mundialBets', JSON.stringify(userBets));
+            localStorage.setItem('matchResults', JSON.stringify(matchResults));
+            
+            // Si está configurado el almacenamiento en la nube, sincronizar
+            if (USE_CLOUD_STORAGE && JSONBIN_BIN_ID !== 'YOUR_BIN_ID_HERE') {
+                try {
+                    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Master-Key': JSONBIN_API_KEY
+                        },
+                        body: JSON.stringify({
+                            userBets: userBets,
+                            matchResults: matchResults,
+                            lastUpdate: new Date().toISOString()
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        console.log('✅ Sincronizado con la nube');
+                    }
+                } catch (error) {
+                    console.log('⚠️ Error al sincronizar con la nube', error);
+                }
+            }
+        }
+        
+        // Guardar apuestas o resultados (botón manual)
         function saveBets() {
             if (!isLoggedIn || !currentUser) {
                 alert('Por favor, inicia sesión primero');
                 return;
             }
             
-            if (currentUser === 'ADMIN') {
-                // Guardar resultados
-                localStorage.setItem('matchResults', JSON.stringify(matchResults));
-            } else {
-                // Guardar apuestas
-                localStorage.setItem('mundialBets', JSON.stringify(userBets));
-            }
+            saveToCloud();
             
             const message = document.getElementById('saveMessage');
             message.textContent = currentUser === 'ADMIN' ? 'Resultados guardados correctamente' : 'Apuestas guardadas correctamente';
@@ -1529,7 +1615,8 @@
                 group: group
             };
             
-            localStorage.setItem('matchResults', JSON.stringify(matchResults));
+            // Guardar automáticamente en la nube y localStorage
+            saveToCloud();
             renderMatches();
             
             const message = document.getElementById('saveMessage');
