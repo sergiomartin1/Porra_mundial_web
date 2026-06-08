@@ -874,6 +874,7 @@
             <button class="save-button" onclick="saveBets()" id="saveBetsBtn">Guardar Apuestas</button>
             <button class="view-button" onclick="viewAllBets()">Ver Todas las Apuestas</button>
             <button class="view-button" onclick="viewStandings()" style="background: #fd7e14;">Clasificación</button>
+            <button class="view-button" onclick="viewMyStandings()" style="background: #ff6b6b;">Mi Clasificación</button>
             <button class="view-button" onclick="viewUserScores()" style="background: #6f42c1;">Puntuación Usuarios</button>
             <button class="view-button" onclick="viewBrackets()" style="background: #e74c3c;">🏆 Cuadros</button>
             <button class="logout-button" onclick="logout()">Cerrar Sesión</button>
@@ -1034,6 +1035,7 @@
             'SOFÍA': 'malaalpadel',
             'IRIA': 'mujerdelsabado',
             'MARTA': 'amantedepijas',
+            'DIFUSOR': 'scrubbdoiro',
             'ADMIN': 'MARVELDREAMER'
         };
 
@@ -1140,7 +1142,8 @@
             'SOFÍA': 'foto_sofia.jpg',
             'IRIA': 'foto_iria.jpg',
             'JESUS': 'foto_jesus.jpg',
-            'MARTA': 'foto_marta.jpg'
+            'MARTA': 'foto_marta.jpg',
+            'DIFUSOR': 'foto_difusor'
         };
 
         // Función para actualizar la foto de perfil del usuario
@@ -1654,7 +1657,7 @@
             const tableContainer = document.getElementById('summaryTableContainer');
             
             // Calcular estadísticas
-            const users = ['PIN', 'MIGUEL', 'MARTINEZ', 'SERGIO', 'JONATHAN', 'QUIROGA', 'JESUS', 'PABLO', 'PARDO', 'SOFÍA', 'IRIA', 'MARTA'];
+            const users = ['PIN', 'MIGUEL', 'MARTINEZ', 'SERGIO', 'JONATHAN', 'QUIROGA', 'JESUS', 'PABLO', 'PARDO', 'SOFÍA', 'IRIA', 'MARTA', 'DIFUSOR'];
             const totalMatches = matches.length;
             
             let statsHTML = '';
@@ -1699,6 +1702,143 @@
         // Cerrar modal
         function closeSummary() {
             document.getElementById('summaryModal').style.display = 'none';
+        }
+
+        // Calcular clasificación de un grupo basada en predicciones del usuario
+        function calculateGroupStandingsByPredictions(groupLetter, username) {
+            const groupMatches = matches.filter(m => m.group === groupLetter);
+            const teams = {};
+            
+            // Inicializar equipos
+            groupMatches.forEach(match => {
+                if (!teams[match.home]) {
+                    teams[match.home] = { 
+                        name: match.home, 
+                        points: 0, 
+                        played: 0, 
+                        won: 0, 
+                        drawn: 0, 
+                        lost: 0
+                    };
+                }
+                if (!teams[match.away]) {
+                    teams[match.away] = { 
+                        name: match.away, 
+                        points: 0, 
+                        played: 0, 
+                        won: 0, 
+                        drawn: 0, 
+                        lost: 0
+                    };
+                }
+            });
+            
+            // Calcular estadísticas basadas en predicciones del usuario
+            groupMatches.forEach(match => {
+                const matchId = `${match.home}-${match.away}`.replace(/\s+/g, '-');
+                const userBet = userBets[username]?.[matchId];
+                
+                if (userBet) {
+                    teams[match.home].played++;
+                    teams[match.away].played++;
+                    
+                    if (userBet === '1') {
+                        // Local gana
+                        teams[match.home].points += 3;
+                        teams[match.home].won++;
+                        teams[match.away].lost++;
+                    } else if (userBet === '2') {
+                        // Visitante gana
+                        teams[match.away].points += 3;
+                        teams[match.away].won++;
+                        teams[match.home].lost++;
+                    } else if (userBet === 'X') {
+                        // Empate
+                        teams[match.home].points += 1;
+                        teams[match.away].points += 1;
+                        teams[match.home].drawn++;
+                        teams[match.away].drawn++;
+                    }
+                }
+            });
+            
+            // Ordenar por puntos, victorias, enfrentamientos directos simulados
+            const standings = Object.values(teams).sort((a, b) => {
+                if (b.points !== a.points) return b.points - a.points;
+                if (b.won !== a.won) return b.won - a.won;
+                if (b.drawn !== a.drawn) return b.drawn - a.drawn;
+                return a.lost - b.lost;
+            });
+            
+            return standings;
+        }
+
+        // Ver clasificación de grupos basada en predicciones del usuario
+        function viewMyStandings() {
+            if (!isLoggedIn || !currentUser) {
+                alert('Por favor, inicia sesión primero');
+                return;
+            }
+            
+            if (currentUser === 'ADMIN') {
+                alert('Esta función muestra la clasificación basada en tus predicciones personales. Como ADMIN, usa la "Clasificación" normal para ver los resultados reales.');
+                return;
+            }
+            
+            const modal = document.getElementById('summaryModal');
+            const statsContainer = document.getElementById('statsContainer');
+            const tableContainer = document.getElementById('summaryTableContainer');
+            
+            statsContainer.innerHTML = `<h2>🔮 Mi Clasificación Predicha (${currentUser})</h2><p style="color: #718096; font-size: 0.9em; margin-top: 8px;">Basada en tus predicciones (sin contar goles, solo resultados)</p>`;
+            
+            let tablesHTML = '';
+            const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+            
+            groups.forEach(group => {
+                const standings = calculateGroupStandingsByPredictions(group, currentUser);
+                
+                tablesHTML += `
+                    <div class="group-section">
+                        <div class="group-header">Grupo ${group}</div>
+                        <table class="standings-table">
+                            <thead>
+                                <tr>
+                                    <th>Equipo</th>
+                                    <th>PJ</th>
+                                    <th>PG</th>
+                                    <th>PE</th>
+                                    <th>PP</th>
+                                    <th>Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                standings.forEach((team, index) => {
+                    const rowClass = index < 2 ? 'qualified' : '';
+                    const countryCode = countryFlags[team.name];
+                    const flagHTML = countryCode ? `<img src="https://flagcdn.com/24x18/${countryCode}.png" srcset="https://flagcdn.com/48x36/${countryCode}.png 2x, https://flagcdn.com/72x54/${countryCode}.png 3x" width="24" height="18" alt="${team.name}" style="display: inline-block; vertical-align: middle; margin-right: 6px; border-radius: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);"> ` : '';
+                    tablesHTML += `
+                        <tr class="${rowClass}">
+                            <td>${index + 1}. ${flagHTML}${team.name}</td>
+                            <td>${team.played}</td>
+                            <td>${team.won}</td>
+                            <td>${team.drawn}</td>
+                            <td>${team.lost}</td>
+                            <td><strong>${team.points}</strong></td>
+                        </tr>
+                    `;
+                });
+                
+                tablesHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            });
+            
+            tableContainer.innerHTML = tablesHTML;
+            modal.style.display = 'block';
         }
 
         // Ver clasificación de grupos
@@ -1917,7 +2057,7 @@
             const statsContainer = document.getElementById('statsContainer');
             const tableContainer = document.getElementById('summaryTableContainer');
             
-            const users = ['PIN', 'MIGUEL', 'MARTINEZ', 'SERGIO', 'JONATHAN', 'QUIROGA', 'JESUS', 'PABLO', 'PARDO', 'SOFÍA', 'IRIA', 'MARTA'];
+            const users = ['PIN', 'MIGUEL', 'MARTINEZ', 'SERGIO', 'JONATHAN', 'QUIROGA', 'JESUS', 'PABLO', 'PARDO', 'SOFÍA', 'IRIA', 'MARTA', 'DIFUSOR'];
             
             // Calcular puntuaciones
             const userScores = users.map(user => ({
