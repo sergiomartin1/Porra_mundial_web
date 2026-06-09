@@ -1100,9 +1100,9 @@
         // Configuración de almacenamiento en la nube
         // IMPORTANTE: Reemplaza esto con tu propia API Key de JSONBin.io (https://jsonbin.io)
         // Es GRATUITO, solo necesitas crear una cuenta y obtener tu API key
-        const JSONBIN_API_KEY = '$2a$10$YOUR_API_KEY_HERE'; // Reemplaza con tu API key
-        const JSONBIN_BIN_ID = 'YOUR_BIN_ID_HERE'; // Reemplaza con tu Bin ID
-        const USE_CLOUD_STORAGE = false; // Cambia a true cuando tengas tu API key
+        const JSONBIN_API_KEY = '$2a$10$zUC9Nt7OZ3o0.kRcwANi4O3P65wUwc0eFvXxR7FAnI8M..fPP2gwi'; // API Key de JSONBin.io
+        const JSONBIN_BIN_ID = '6a283269f5f4af5e29d2abbf'; // Bin ID de JSONBin.io
+        const USE_CLOUD_STORAGE = true; // ✅ Almacenamiento en la nube ACTIVADO
         
         // Audios para equipos especiales
         let audiosPanch = null;
@@ -1281,8 +1281,28 @@
             }
         }
 
+        // Limpiar datos antiguos del localStorage al migrar a la nube
+        function clearOldLocalData() {
+            // Verificar si ya se hizo la migración a la nube
+            const cloudMigrated = localStorage.getItem('cloudMigrated');
+            
+            if (USE_CLOUD_STORAGE && !cloudMigrated) {
+                // Limpiar solo los datos de la porra mundial (no todo el localStorage)
+                console.log('🧹 Limpiando datos antiguos locales...');
+                localStorage.removeItem('mundialBets');
+                localStorage.removeItem('matchResults');
+                
+                // Marcar como migrado para no volver a limpiar
+                localStorage.setItem('cloudMigrated', 'true');
+                console.log('✅ Datos locales antiguos eliminados. Ahora usando almacenamiento en la nube.');
+            }
+        }
+
         // Cargar apuestas desde la nube o localStorage
         async function loadBets() {
+            // Limpiar datos antiguos si es la primera vez con la nube
+            clearOldLocalData();
+            
             if (USE_CLOUD_STORAGE && JSONBIN_BIN_ID !== 'YOUR_BIN_ID_HERE') {
                 try {
                     // Intentar cargar desde la nube
