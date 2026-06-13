@@ -990,7 +990,6 @@
                         <option value="SOFÍA">SOFÍA</option>
                         <option value="IRIA">IRIA</option>
                         <option value="MARTA">MARTA</option>
-                        <option value="DIFUSOR">DIFUSOR</option>
                         <option value="ADMIN">🔑 ADMIN</option>
                     </select>
                 </div>
@@ -1182,6 +1181,7 @@
             'IRIA': 'mujerdelsabado',
             'MARTA': 'amantedepijas',
             'DIFUSOR': 'scrubbdoiro',
+            'ADRI': 'bancosantander',
             'ADMIN': 'MARVELDREAMER'
         };
 
@@ -1297,7 +1297,8 @@
             'IRIA': 'foto_iria.jpg',
             'JESUS': 'foto_jesus.jpg',
             'MARTA': 'foto_marta.jpg',
-            'DIFUSOR': 'foto_difusor.jpg'
+            'DIFUSOR': 'foto_difusor.jpg',
+            'ADRI': 'foto_adri.jpg'
         };
 
         // Función para actualizar la foto de perfil del usuario
@@ -1919,7 +1920,7 @@
             const tableContainer = document.getElementById('summaryTableContainer');
             
             // Calcular estadísticas
-            const users = ['PIN', 'MIGUEL', 'MARTINEZ', 'SERGIO', 'JONATHAN', 'QUIROGA', 'JESUS', 'PABLO', 'PARDO', 'SOFÍA', 'IRIA', 'MARTA', 'DIFUSOR'];
+            const users = ['PIN', 'MIGUEL', 'MARTINEZ', 'SERGIO', 'JONATHAN', 'QUIROGA', 'JESUS', 'PABLO', 'PARDO', 'SOFÍA', 'IRIA', 'MARTA', 'DIFUSOR', 'ADRI'];
             const totalMatches = matches.length;
             
             let statsHTML = '';
@@ -2687,7 +2688,7 @@
             const statsContainer = document.getElementById('statsContainer');
             const tableContainer = document.getElementById('summaryTableContainer');
             
-            const users = ['PIN', 'MIGUEL', 'MARTINEZ', 'SERGIO', 'JONATHAN', 'QUIROGA', 'JESUS', 'PABLO', 'PARDO', 'SOFÍA', 'IRIA', 'MARTA', 'DIFUSOR'];
+            const users = ['PIN', 'MIGUEL', 'MARTINEZ', 'SERGIO', 'JONATHAN', 'QUIROGA', 'JESUS', 'PABLO', 'PARDO', 'SOFÍA', 'IRIA', 'MARTA', 'DIFUSOR', 'ADRI'];
             
             // Calcular puntuaciones
             const userScores = users.map(user => ({
