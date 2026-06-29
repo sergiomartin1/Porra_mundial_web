@@ -4336,22 +4336,25 @@
             const modal = document.getElementById('summaryModal');
             const statsContainer = document.getElementById('statsContainer');
             const tableContainer = document.getElementById('summaryTableContainer');
-            document.getElementById('modalTitle').textContent = `🏆 Mi Cuadro - ${currentUser}`;
+            document.getElementById('modalTitle').textContent = `🏆 Cuadro de Eliminatorias`;
             
-            // Mostrar selector de usuario para ver cuadros de otros
+            // Obtener el usuario seleccionado (si existe en el DOM)
+            const selector = document.getElementById('bracketUserSelector');
+            const selectedUser = selector ? selector.value : currentUser;
+            
+            // Generar opciones de usuarios
             const users = ['PIN', 'MIGUEL', 'MARTINEZ', 'SERGIO', 'JONATHAN', 'QUIROGA', 'JESUS', 'PABLO', 'PARDO', 'SOFÍA', 'IRIA', 'MARTA', 'DIFUSOR', 'ADRI'];
-            const userOptions = users.filter(u => u !== currentUser).map(u => 
-                `<option value="${u}">${u}</option>`
+            const userOptions = users.map(u => 
+                `<option value="${u}" ${u === selectedUser ? 'selected' : ''}>${u === currentUser ? u + ' (mi cuadro)' : u}</option>`
             ).join('');
             
             statsContainer.innerHTML = `
                 <div class="bracket-user-selector">
                     <label>👤 Ver cuadro de:</label>
                     <select id="bracketUserSelector" onchange="viewMyBracket()">
-                        <option value="${currentUser}" selected>${currentUser} (mi cuadro)</option>
                         ${userOptions}
                     </select>
-                    <span class="user-badge" id="bracketUserBadge">${currentUser}</span>
+                    <span class="user-badge" id="bracketUserBadge">${selectedUser}</span>
                     <span style="margin-left: auto; font-size: 0.85em; color: #718096;">
                         📊 Clic en equipo para seleccionar ganador
                     </span>
@@ -4359,15 +4362,11 @@
                 <div id="bracketStatsContainer"></div>
             `;
             
-            // Obtener el usuario seleccionado
-            const selector = document.getElementById('bracketUserSelector');
-            const selectedUser = selector ? selector.value : currentUser;
-            
             // Actualizar badge
             const badge = document.getElementById('bracketUserBadge');
             if (badge) badge.textContent = selectedUser;
             
-            // Generar el cuadro completo
+            // Generar el cuadro completo para el usuario seleccionado
             const contentHTML = generateFullBracket(selectedUser);
             
             // Añadir estadísticas del usuario
@@ -4379,6 +4378,7 @@
         }
         
         function generateBracketStats(username) {
+            // Asegurarse de que los datos existen para el usuario
             const userPreds = knockoutPredictions[username] || {};
             const totalMatches = Object.keys(userPreds).length;
             let hits = 0, misses = 0, pending = 0;
@@ -4434,9 +4434,14 @@
         }
         
         function generateFullBracket(username) {
+            // Asegurarse de que el usuario tiene datos
+            if (!knockoutPredictions[username]) {
+                knockoutPredictions[username] = {};
+            }
+            
             const userPreds = knockoutPredictions[username] || {};
             
-            // Generar todas las fases
+            // Generar todas las fases usando las funciones que aceptan username
             const phases = [
                 { id: 'round16', label: '1/16 de Final', matches: knockoutRound16Matches },
                 { id: 'round8', label: 'Octavos de Final', matches: generateRound8MatchesForUser(username) },
@@ -4464,6 +4469,7 @@
                             </div>
                             <div class="bracket-phase-body" style="text-align: center; padding: 30px; color: #a0aec0;">
                                 <p style="font-size: 1.1em;">⏳ Esperando resultados de la fase anterior</p>
+                                <p style="font-size: 0.85em; margin-top: 8px;">Completa la fase anterior para ver los cruces</p>
                             </div>
                         </div>
                     `;
@@ -4508,6 +4514,7 @@
                         status = 'pending';
                         statusText = `🔮 ${userPred}`;
                         statusClass = 'pending';
+                        stats.pending++;
                     } else {
                         status = 'waiting';
                         statusText = '⏳ Sin predecir';
@@ -4525,6 +4532,9 @@
                     const awayCorrect = realWinner === match.away ? 'real-winner' : '';
                     const homeWrong = userPred === match.home && realWinner && userPred !== realWinner ? 'wrong' : '';
                     const awayWrong = userPred === match.away && realWinner && userPred !== realWinner ? 'wrong' : '';
+                    
+                    // Determinar si el usuario puede votar (solo su propio cuadro)
+                    const canVote = username === currentUser && !realWinner && !(new Date() >= PREDICTION_DEADLINE);
                     
                     matchesHTML += `
                         <div class="bracket-match-card">
@@ -4546,16 +4556,20 @@
                                 </div>
                             </div>
                             <div class="knockout-bet-options">
-                                <button class="bet-button ${userPred === match.home ? 'selected' : ''} ${realWinner === match.home ? 'real-winner' : ''} ${userPred === match.home && realWinner && userPred !== realWinner ? 'wrong' : ''}"
-                                        onclick="saveKnockoutPredictionFromBracket('${matchId}', '${match.home}', '${match.away}')"
-                                        ${realWinner && userPred !== match.home ? 'disabled' : ''}>
-                                    ${flagHome} ${match.home}
-                                </button>
-                                <button class="bet-button ${userPred === match.away ? 'selected' : ''} ${realWinner === match.away ? 'real-winner' : ''} ${userPred === match.away && realWinner && userPred !== realWinner ? 'wrong' : ''}"
-                                        onclick="saveKnockoutPredictionFromBracket('${matchId}', '${match.away}', '${match.home}')"
-                                        ${realWinner && userPred !== match.away ? 'disabled' : ''}>
-                                    ${flagAway} ${match.away}
-                                </button>
+                                ${canVote ? `
+                                    <button class="bet-button ${userPred === match.home ? 'selected' : ''} ${realWinner === match.home ? 'real-winner' : ''} ${userPred === match.home && realWinner && userPred !== realWinner ? 'wrong' : ''}"
+                                            onclick="saveKnockoutPredictionFromBracket('${matchId}', '${match.home}', '${match.away}')">
+                                        ${flagHome} ${match.home}
+                                    </button>
+                                    <button class="bet-button ${userPred === match.away ? 'selected' : ''} ${realWinner === match.away ? 'real-winner' : ''} ${userPred === match.away && realWinner && userPred !== realWinner ? 'wrong' : ''}"
+                                            onclick="saveKnockoutPredictionFromBracket('${matchId}', '${match.away}', '${match.home}')">
+                                        ${flagAway} ${match.away}
+                                    </button>
+                                ` : `
+                                    <span style="font-size: 0.8em; color: #718096; font-style: italic;">
+                                        ${username === currentUser ? '⛔ Plazo finalizado' : '👁️ Solo lectura'}
+                                    </span>
+                                `}
                             </div>
                         </div>
                     `;
@@ -4611,7 +4625,22 @@
             
             saveToCloud();
             showAutoSaveMessage();
-            viewMyBracket(); // Refrescar
+            
+            // Refrescar la vista manteniendo el usuario seleccionado
+            const selector = document.getElementById('bracketUserSelector');
+            const selectedUser = selector ? selector.value : currentUser;
+            viewMyBracket();
+            
+            // Restaurar el selector al usuario que estaba viendo
+            setTimeout(() => {
+                const newSelector = document.getElementById('bracketUserSelector');
+                if (newSelector) {
+                    newSelector.value = selectedUser;
+                }
+                // Actualizar badge
+                const badge = document.getElementById('bracketUserBadge');
+                if (badge) badge.textContent = selectedUser;
+            }, 50);
         }
         
         // Funciones auxiliares para generar cruces para un usuario específico
