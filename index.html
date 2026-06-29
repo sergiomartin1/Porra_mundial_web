@@ -1137,6 +1137,296 @@
             color: #2c5282;
             margin: 0;
         }
+
+        /* ===== NUEVOS ESTILOS PARA MI CUADRO MEJORADO ===== */
+        .bracket-phase {
+            margin-bottom: 30px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .bracket-phase-header {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: white;
+            padding: 12px 20px;
+            font-weight: 700;
+            font-size: 1.05em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .bracket-phase-header .phase-stats {
+            font-size: 0.8em;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        .bracket-phase-body {
+            padding: 16px;
+        }
+
+        .bracket-match-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .bracket-match-card:hover {
+            border-color: #4299e1;
+            box-shadow: 0 2px 12px rgba(66, 153, 225, 0.1);
+        }
+
+        .bracket-match-card .match-info-left {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .bracket-match-card .match-label-small {
+            font-size: 0.8em;
+            color: #718096;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .bracket-match-card .match-teams-display {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .bracket-match-card .team-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95em;
+            background: #f7fafc;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .bracket-match-card .team-box.vs {
+            color: #e53e3e;
+            font-weight: 800;
+            background: transparent;
+            border: none;
+            padding: 6px 4px;
+        }
+
+        .bracket-match-card .team-box.predicted {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .bracket-match-card .team-box.correct {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+
+        .bracket-match-card .team-box.wrong {
+            border-color: #e53e3e;
+            background: #fff5f5;
+        }
+
+        .bracket-match-card .team-box.real-winner {
+            border-color: #48bb78;
+            background: #f0fff4;
+            box-shadow: 0 0 0 2px #48bb78;
+        }
+
+        .bracket-match-card .team-box.pending {
+            border-color: #ecc94b;
+            background: #fffff0;
+        }
+
+        .bracket-match-card .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-badge.success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-badge.error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .status-badge.pending {
+            background: #fefcbf;
+            color: #744210;
+        }
+
+        .status-badge.real {
+            background: #bee3f8;
+            color: #2a4365;
+        }
+
+        .status-badge.waiting {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        /* Selector de usuario para ver cuadros de otros */
+        .bracket-user-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background: #edf2f7;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .bracket-user-selector label {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .bracket-user-selector select {
+            padding: 8px 16px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 0.95em;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bracket-user-selector select:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+
+        .bracket-user-selector .user-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: #4299e1;
+            color: white;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .knockout-bet-options {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .knockout-bet-options .bet-button {
+            padding: 8px 16px;
+            border: 2px solid #cbd5e0;
+            background: white;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.2s;
+            min-width: 50px;
+        }
+
+        .knockout-bet-options .bet-button:hover {
+            background: #f7fafc;
+            border-color: #a0aec0;
+        }
+
+        .knockout-bet-options .bet-button.selected {
+            background: #48bb78;
+            color: white;
+            border-color: #48bb78;
+        }
+
+        .knockout-bet-options .bet-button.real-winner {
+            background: #48bb78;
+            color: white;
+            border-color: #48bb78;
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.4);
+        }
+
+        .knockout-bet-options .bet-button.wrong {
+            background: #e53e3e;
+            color: white;
+            border-color: #e53e3e;
+            opacity: 0.7;
+        }
+
+        .knockout-bet-options .bet-button.pending-option {
+            border-color: #ecc94b;
+            background: #fffff0;
+        }
+
+        .bracket-match-card .match-result-info {
+            font-size: 0.8em;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        .bracket-summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .bracket-summary-stats .stat-item {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .bracket-summary-stats .stat-item .number {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .bracket-summary-stats .stat-item .label {
+            font-size: 0.8em;
+            color: #718096;
+        }
+
+        .bracket-summary-stats .stat-item.hits .number {
+            color: #48bb78;
+        }
+
+        .bracket-summary-stats .stat-item.misses .number {
+            color: #e53e3e;
+        }
+
+        .bracket-summary-stats .stat-item.pending .number {
+            color: #ecc94b;
+        }
+
+        .bracket-summary-stats .stat-item.total .number {
+            color: #4299e1;
+        }
     </style>
 </head>
 <body>
@@ -1496,7 +1786,7 @@
         const equiposEspana = ['España'];
         
         // Fecha límite para predicciones (1 de julio 2026)
-        const PREDICTION_DEADLINE = new Date(2026, 6, 1, 0, 0, 0); // 1 de julio 2026
+        const PREDICTION_DEADLINE = new Date(2026, 6, 1, 0, 0, 0);
         
         function initAudios() {
             audiosPanch = new Audio('panch.wav');
@@ -1816,7 +2106,7 @@
                         
                         matchCard.innerHTML = `
                             <div class="match-info">
-                                <div class="match-teams">${getTeamDisplay(match.home)} vs ${getTeamDisplay(match.away)} ${resultDisplay}</div>
+                                <div class="-match-teams">${getTeamDisplay(match.home)} vs ${getTeamDisplay(match.away)} ${resultDisplay}</div>
                                 <div class="match-details">
                                     <span class="match-time">${match.time}</span> | 
                                     ${match.venue} | Grupo ${match.group}
@@ -4030,7 +4320,7 @@
             return score;
         }
 
-        // ==================== MI CUADRO ====================
+        // ==================== MI CUADRO MEJORADO ====================
         
         function viewMyBracket() {
             if (!isLoggedIn || !currentUser) {
@@ -4039,114 +4329,453 @@
             }
             
             if (currentUser === 'ADMIN') {
-                alert('Esta función muestra tu cuadro personal basado en tus predicciones.');
+                alert('Esta función muestra el cuadro personal basado en predicciones.');
                 return;
             }
             
             const modal = document.getElementById('summaryModal');
             const statsContainer = document.getElementById('statsContainer');
             const tableContainer = document.getElementById('summaryTableContainer');
-            document.getElementById('modalTitle').textContent = `🏆 Mi Cuadro (${currentUser})`;
+            document.getElementById('modalTitle').textContent = `🏆 Mi Cuadro - ${currentUser}`;
+            
+            // Mostrar selector de usuario para ver cuadros de otros
+            const users = ['PIN', 'MIGUEL', 'MARTINEZ', 'SERGIO', 'JONATHAN', 'QUIROGA', 'JESUS', 'PABLO', 'PARDO', 'SOFÍA', 'IRIA', 'MARTA', 'DIFUSOR', 'ADRI'];
+            const userOptions = users.filter(u => u !== currentUser).map(u => 
+                `<option value="${u}">${u}</option>`
+            ).join('');
             
             statsContainer.innerHTML = `
-                <p style="color: #718096; font-size: 0.9em; margin-top: 8px;">
-                    Basado en tus predicciones de eliminatorias. 
-                    <span style="color: #48bb78; font-weight: 600;">Verde</span> = acierto, 
-                    <span style="color: #e53e3e; font-weight: 600;">Rojo</span> = fallo.
-                </p>
+                <div class="bracket-user-selector">
+                    <label>👤 Ver cuadro de:</label>
+                    <select id="bracketUserSelector" onchange="viewMyBracket()">
+                        <option value="${currentUser}" selected>${currentUser} (mi cuadro)</option>
+                        ${userOptions}
+                    </select>
+                    <span class="user-badge" id="bracketUserBadge">${currentUser}</span>
+                    <span style="margin-left: auto; font-size: 0.85em; color: #718096;">
+                        📊 Clic en equipo para seleccionar ganador
+                    </span>
+                </div>
+                <div id="bracketStatsContainer"></div>
             `;
             
-            let contentHTML = `
-                <div style="margin-top: 20px;">
-                    <h3 style="text-align: center; color: #2d3748; margin-bottom: 20px;">📊 Mi Cuadro de Eliminatorias</h3>
-            `;
+            // Obtener el usuario seleccionado
+            const selector = document.getElementById('bracketUserSelector');
+            const selectedUser = selector ? selector.value : currentUser;
             
-            // Mostrar todas las fases
+            // Actualizar badge
+            const badge = document.getElementById('bracketUserBadge');
+            if (badge) badge.textContent = selectedUser;
+            
+            // Generar el cuadro completo
+            const contentHTML = generateFullBracket(selectedUser);
+            
+            // Añadir estadísticas del usuario
+            const statsHTML = generateBracketStats(selectedUser);
+            document.getElementById('bracketStatsContainer').innerHTML = statsHTML;
+            
+            tableContainer.innerHTML = contentHTML;
+            modal.style.display = 'block';
+        }
+        
+        function generateBracketStats(username) {
+            const userPreds = knockoutPredictions[username] || {};
+            const totalMatches = Object.keys(userPreds).length;
+            let hits = 0, misses = 0, pending = 0;
+            
+            // Contar aciertos en todas las fases
+            for (const matchId in userPreds) {
+                const result = knockoutResults[matchId];
+                if (result && result.winner) {
+                    if (userPreds[matchId] === result.winner) {
+                        hits++;
+                    } else {
+                        misses++;
+                    }
+                } else {
+                    pending++;
+                }
+            }
+            
+            const totalResults = hits + misses;
+            const accuracy = totalResults > 0 ? Math.round((hits / totalResults) * 100) : 0;
+            
+            // Calcular puntuación de eliminatorias
+            const score = calculateKnockoutScore(username);
+            
+            return `
+                <div class="bracket-summary-stats">
+                    <div class="stat-item hits">
+                        <div class="number">${hits}</div>
+                        <div class="label">✅ Aciertos</div>
+                    </div>
+                    <div class="stat-item misses">
+                        <div class="number">${misses}</div>
+                        <div class="label">❌ Fallos</div>
+                    </div>
+                    <div class="stat-item pending">
+                        <div class="number">${pending}</div>
+                        <div class="label">⏳ Pendientes</div>
+                    </div>
+                    <div class="stat-item total">
+                        <div class="number">${totalResults}</div>
+                        <div class="label">📊 Total</div>
+                    </div>
+                    <div class="stat-item" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+                        <div class="number" style="color: white;">${accuracy}%</div>
+                        <div class="label" style="color: rgba(255,255,255,0.8);">🎯 Precisión</div>
+                    </div>
+                    <div class="stat-item" style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white;">
+                        <div class="number" style="color: white;">${score}</div>
+                        <div class="label" style="color: rgba(255,255,255,0.8);">🏆 Puntos KO</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function generateFullBracket(username) {
+            const userPreds = knockoutPredictions[username] || {};
+            
+            // Generar todas las fases
             const phases = [
                 { id: 'round16', label: '1/16 de Final', matches: knockoutRound16Matches },
-                { id: 'round8', label: 'Octavos de Final', matches: generateRound8Matches() },
-                { id: 'round4', label: 'Cuartos de Final', matches: generateRound4Matches() },
-                { id: 'round2', label: 'Semifinales', matches: generateRound2Matches() },
-                { id: 'final', label: 'Final', matches: [generateFinalMatch()] },
-                { id: 'thirdPlace', label: 'Tercer y Cuarto Puesto', matches: [generateThirdPlaceMatch()] }
+                { id: 'round8', label: 'Octavos de Final', matches: generateRound8MatchesForUser(username) },
+                { id: 'round4', label: 'Cuartos de Final', matches: generateRound4MatchesForUser(username) },
+                { id: 'round2', label: 'Semifinales', matches: generateRound2MatchesForUser(username) },
+                { id: 'final', label: '🏆 Final', matches: [generateFinalMatchForUser(username)] },
+                { id: 'thirdPlace', label: '🥉 Tercer Puesto', matches: [generateThirdPlaceMatchForUser(username)] }
             ];
             
-            const userPreds = knockoutPredictions[currentUser] || {};
+            let html = '';
             
             phases.forEach(phase => {
-                contentHTML += `
-                    <div style="margin-bottom: 25px; background: #f8fafc; border-radius: 10px; padding: 15px; border: 1px solid #e2e8f0;">
-                        <div style="background: #2d3748; color: white; padding: 8px 15px; border-radius: 6px; margin-bottom: 12px; font-weight: 600;">
-                            ${phase.label}
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px;">
-                `;
+                // Filtrar solo partidos que tienen equipos definidos
+                const validMatches = phase.matches.filter(m => 
+                    m.home && m.home !== 'TBD' && m.away && m.away !== 'TBD'
+                );
                 
-                phase.matches.forEach(match => {
+                if (validMatches.length === 0 && phase.matches.length > 0) {
+                    // Si no hay partidos válidos, mostrar mensaje
+                    html += `
+                        <div class="bracket-phase">
+                            <div class="bracket-phase-header">
+                                ${phase.label}
+                                <span class="phase-stats">⏳ Pendiente de resultados anteriores</span>
+                            </div>
+                            <div class="bracket-phase-body" style="text-align: center; padding: 30px; color: #a0aec0;">
+                                <p style="font-size: 1.1em;">⏳ Esperando resultados de la fase anterior</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                if (validMatches.length === 0) return;
+                
+                let stats = { total: 0, correct: 0, wrong: 0, pending: 0 };
+                
+                // Generar HTML para los partidos
+                let matchesHTML = '';
+                validMatches.forEach(match => {
                     const matchId = match.id;
                     const userPred = userPreds[matchId] || '';
                     const realResult = knockoutResults[matchId];
                     const realWinner = realResult?.winner || '';
                     
-                    let status = '';
-                    let statusColor = '';
+                    // Determinar estado
+                    let status = 'pending';
+                    let statusText = '⏳ Pendiente';
+                    let statusClass = 'pending';
                     
                     if (realWinner && userPred) {
                         if (userPred === realWinner) {
-                            status = '✅ ACIERTO';
-                            statusColor = '#48bb78';
-                        } else if (userPred && realWinner) {
-                            status = '❌ FALLO';
-                            statusColor = '#e53e3e';
+                            status = 'correct';
+                            statusText = '✅ Acierto';
+                            statusClass = 'success';
+                            stats.correct++;
+                        } else {
+                            status = 'wrong';
+                            statusText = '❌ Fallo';
+                            statusClass = 'error';
+                            stats.wrong++;
                         }
-                    } else if (realWinner) {
-                        status = `🏆 ${realWinner}`;
-                        statusColor = '#4299e1';
-                    } else if (userPred) {
-                        status = `🔮 ${userPred}`;
-                        statusColor = '#ed8936';
+                        stats.total++;
+                    } else if (realWinner && !userPred) {
+                        status = 'real';
+                        statusText = `🏆 ${realWinner}`;
+                        statusClass = 'real';
+                    } else if (userPred && !realWinner) {
+                        status = 'pending';
+                        statusText = `🔮 ${userPred}`;
+                        statusClass = 'pending';
                     } else {
-                        status = '⏳ Pendiente';
-                        statusColor = '#a0aec0';
+                        status = 'waiting';
+                        statusText = '⏳ Sin predecir';
+                        statusClass = 'waiting';
+                        stats.pending++;
                     }
                     
-                    const isAvailable = match.home && match.home !== 'TBD' && match.away && match.away !== 'TBD';
+                    const flagHome = getFlag(match.home);
+                    const flagAway = getFlag(match.away);
                     
-                    contentHTML += `
-                        <div style="background: white; border: 2px solid ${isAvailable ? '#e2e8f0' : '#f0f0f0'}; border-radius: 8px; padding: 12px; ${!isAvailable ? 'opacity: 0.5;' : ''}">
-                            <div style="font-size: 0.8em; color: #718096; font-weight: 600; margin-bottom: 6px;">${match.label || 'Partido'}</div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.95em;">
-                                <span style="font-weight: 600;">${isAvailable ? `${getFlag(match.home)}${match.home}` : 'TBD'}</span>
-                                <span style="color: #e53e3e; font-weight: 700;">VS</span>
-                                <span style="font-weight: 600;">${isAvailable ? `${getFlag(match.away)}${match.away}` : 'TBD'}</span>
+                    // Clase para cada equipo basado en su estado
+                    const homeClass = userPred === match.home ? 'predicted' : '';
+                    const awayClass = userPred === match.away ? 'predicted' : '';
+                    const homeCorrect = realWinner === match.home ? 'real-winner' : '';
+                    const awayCorrect = realWinner === match.away ? 'real-winner' : '';
+                    const homeWrong = userPred === match.home && realWinner && userPred !== realWinner ? 'wrong' : '';
+                    const awayWrong = userPred === match.away && realWinner && userPred !== realWinner ? 'wrong' : '';
+                    
+                    matchesHTML += `
+                        <div class="bracket-match-card">
+                            <div class="match-info-left">
+                                <div class="match-label-small">${match.label || matchId}</div>
+                                <div class="match-teams-display">
+                                    <div class="team-box ${homeClass} ${homeCorrect} ${homeWrong}">
+                                        ${flagHome} ${match.home}
+                                        ${homeCorrect ? '🏆' : ''}
+                                        ${homeWrong ? '❌' : ''}
+                                    </div>
+                                    <div class="team-box vs">VS</div>
+                                    <div class="team-box ${awayClass} ${awayCorrect} ${awayWrong}">
+                                        ${flagAway} ${match.away}
+                                        ${awayCorrect ? '🏆' : ''}
+                                        ${awayWrong ? '❌' : ''}
+                                    </div>
+                                    <span class="status-badge ${statusClass}">${statusText}</span>
+                                </div>
                             </div>
-                            <div style="margin-top: 8px; text-align: center; font-weight: 600; color: ${statusColor};">
-                                ${status}
+                            <div class="knockout-bet-options">
+                                <button class="bet-button ${userPred === match.home ? 'selected' : ''} ${realWinner === match.home ? 'real-winner' : ''} ${userPred === match.home && realWinner && userPred !== realWinner ? 'wrong' : ''}"
+                                        onclick="saveKnockoutPredictionFromBracket('${matchId}', '${match.home}', '${match.away}')"
+                                        ${realWinner && userPred !== match.home ? 'disabled' : ''}>
+                                    ${flagHome} ${match.home}
+                                </button>
+                                <button class="bet-button ${userPred === match.away ? 'selected' : ''} ${realWinner === match.away ? 'real-winner' : ''} ${userPred === match.away && realWinner && userPred !== realWinner ? 'wrong' : ''}"
+                                        onclick="saveKnockoutPredictionFromBracket('${matchId}', '${match.away}', '${match.home}')"
+                                        ${realWinner && userPred !== match.away ? 'disabled' : ''}>
+                                    ${flagAway} ${match.away}
+                                </button>
                             </div>
                         </div>
                     `;
                 });
                 
-                contentHTML += `
+                // Mostrar estadísticas de la fase
+                const total = stats.correct + stats.wrong;
+                const accuracy = total > 0 ? Math.round((stats.correct / total) * 100) : 0;
+                
+                html += `
+                    <div class="bracket-phase">
+                        <div class="bracket-phase-header">
+                            ${phase.label}
+                            <span class="phase-stats">
+                                ✅ ${stats.correct} aciertos | ❌ ${stats.wrong} fallos | ⏳ ${stats.pending} pendientes
+                                ${total > 0 ? `| 🎯 ${accuracy}%` : ''}
+                            </span>
+                        </div>
+                        <div class="bracket-phase-body">
+                            ${matchesHTML}
                         </div>
                     </div>
                 `;
             });
             
-            // Puntuación total de eliminatorias
-            const knockoutScore = calculateKnockoutScore(currentUser);
-            contentHTML += `
-                <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; color: white; margin-top: 20px;">
-                    <h3 style="margin: 0;">🏆 Puntuación en Eliminatorias</h3>
-                    <p style="font-size: 2.5em; margin: 10px 0; font-weight: 700;">${knockoutScore}</p>
-                    <p style="opacity: 0.9; margin: 0;">+ ${Object.keys(knockoutResults).length} partidos disputados</p>
-                </div>
-            `;
+            return html;
+        }
+        
+        function saveKnockoutPredictionFromBracket(matchId, team, opponent) {
+            // Verificar si el usuario puede votar
+            const now = new Date();
+            if (now >= PREDICTION_DEADLINE && currentUser !== 'ADMIN') {
+                alert('⛔ El plazo para hacer predicciones ha finalizado (1 de julio 2026)');
+                return;
+            }
             
-            contentHTML += `</div>`;
+            // Verificar si ya hay resultado real
+            if (knockoutResults[matchId] && knockoutResults[matchId].winner) {
+                alert('⛔ Este partido ya tiene un resultado real registrado');
+                return;
+            }
             
-            tableContainer.innerHTML = contentHTML;
-            modal.style.display = 'block';
+            if (!knockoutPredictions[currentUser]) {
+                knockoutPredictions[currentUser] = {};
+            }
+            
+            // Si ya tenía una predicción y es la misma, la quitamos (toggle)
+            if (knockoutPredictions[currentUser][matchId] === team) {
+                knockoutPredictions[currentUser][matchId] = '';
+            } else {
+                knockoutPredictions[currentUser][matchId] = team;
+            }
+            
+            saveToCloud();
+            showAutoSaveMessage();
+            viewMyBracket(); // Refrescar
+        }
+        
+        // Funciones auxiliares para generar cruces para un usuario específico
+        function generateRound8MatchesForUser(username) {
+            const matches = [];
+            const winners = {};
+            
+            knockoutRound16Matches.forEach(m => {
+                const result = knockoutResults[m.id];
+                if (result && result.winner) {
+                    winners[m.id] = result.winner;
+                } else {
+                    const userPred = knockoutPredictions[username]?.[m.id];
+                    if (userPred) {
+                        winners[m.id] = userPred;
+                    }
+                }
+            });
+            
+            const pairs = [
+                { id: 'k8_1', homeId: 'k16_1', awayId: 'k16_2', label: 'Ganador 1 vs Ganador 2' },
+                { id: 'k8_2', homeId: 'k16_3', awayId: 'k16_4', label: 'Ganador 3 vs Ganador 4' },
+                { id: 'k8_3', homeId: 'k16_5', awayId: 'k16_6', label: 'Ganador 5 vs Ganador 6' },
+                { id: 'k8_4', homeId: 'k16_7', awayId: 'k16_8', label: 'Ganador 7 vs Ganador 8' },
+                { id: 'k8_5', homeId: 'k16_9', awayId: 'k16_10', label: 'Ganador 9 vs Ganador 10' },
+                { id: 'k8_6', homeId: 'k16_11', awayId: 'k16_12', label: 'Ganador 11 vs Ganador 12' },
+                { id: 'k8_7', homeId: 'k16_13', awayId: 'k16_14', label: 'Ganador 13 vs Ganador 14' },
+                { id: 'k8_8', homeId: 'k16_15', awayId: 'k16_16', label: 'Ganador 15 vs Ganador 16' }
+            ];
+            
+            pairs.forEach(p => {
+                matches.push({
+                    id: p.id,
+                    home: winners[p.homeId] || 'TBD',
+                    away: winners[p.awayId] || 'TBD',
+                    label: p.label
+                });
+            });
+            
+            return matches;
+        }
+        
+        function generateRound4MatchesForUser(username) {
+            const matches = [];
+            const winners = {};
+            const round8Matches = generateRound8MatchesForUser(username);
+            
+            round8Matches.forEach(m => {
+                const result = knockoutResults[m.id];
+                if (result && result.winner) {
+                    winners[m.id] = result.winner;
+                } else {
+                    const userPred = knockoutPredictions[username]?.[m.id];
+                    if (userPred) {
+                        winners[m.id] = userPred;
+                    }
+                }
+            });
+            
+            const pairs = [
+                { id: 'k4_1', homeId: 'k8_1', awayId: 'k8_2', label: 'Ganador Octavo 1 vs Ganador Octavo 2' },
+                { id: 'k4_2', homeId: 'k8_3', awayId: 'k8_4', label: 'Ganador Octavo 3 vs Ganador Octavo 4' },
+                { id: 'k4_3', homeId: 'k8_5', awayId: 'k8_6', label: 'Ganador Octavo 5 vs Ganador Octavo 6' },
+                { id: 'k4_4', homeId: 'k8_7', awayId: 'k8_8', label: 'Ganador Octavo 7 vs Ganador Octavo 8' }
+            ];
+            
+            pairs.forEach(p => {
+                matches.push({
+                    id: p.id,
+                    home: winners[p.homeId] || 'TBD',
+                    away: winners[p.awayId] || 'TBD',
+                    label: p.label
+                });
+            });
+            
+            return matches;
+        }
+        
+        function generateRound2MatchesForUser(username) {
+            const matches = [];
+            const winners = {};
+            const round4Matches = generateRound4MatchesForUser(username);
+            
+            round4Matches.forEach(m => {
+                const result = knockoutResults[m.id];
+                if (result && result.winner) {
+                    winners[m.id] = result.winner;
+                } else {
+                    const userPred = knockoutPredictions[username]?.[m.id];
+                    if (userPred) {
+                        winners[m.id] = userPred;
+                    }
+                }
+            });
+            
+            const pairs = [
+                { id: 'k2_1', homeId: 'k4_1', awayId: 'k4_2', label: 'Ganador Cuarto 1 vs Ganador Cuarto 2' },
+                { id: 'k2_2', homeId: 'k4_3', awayId: 'k4_4', label: 'Ganador Cuarto 3 vs Ganador Cuarto 4' }
+            ];
+            
+            pairs.forEach(p => {
+                matches.push({
+                    id: p.id,
+                    home: winners[p.homeId] || 'TBD',
+                    away: winners[p.awayId] || 'TBD',
+                    label: p.label
+                });
+            });
+            
+            return matches;
+        }
+        
+        function generateFinalMatchForUser(username) {
+            const winners = {};
+            const round2Matches = generateRound2MatchesForUser(username);
+            
+            round2Matches.forEach(m => {
+                const result = knockoutResults[m.id];
+                if (result && result.winner) {
+                    winners[m.id] = result.winner;
+                } else {
+                    const userPred = knockoutPredictions[username]?.[m.id];
+                    if (userPred) {
+                        winners[m.id] = userPred;
+                    }
+                }
+            });
+            
+            return {
+                id: 'final',
+                home: winners['k2_1'] || 'TBD',
+                away: winners['k2_2'] || 'TBD',
+                label: 'Final'
+            };
+        }
+        
+        function generateThirdPlaceMatchForUser(username) {
+            const round2Matches = generateRound2MatchesForUser(username);
+            const losers = [];
+            
+            round2Matches.forEach(m => {
+                const result = knockoutResults[m.id];
+                if (result && result.winner) {
+                    const loser = result.homeTeam === result.winner ? result.awayTeam : result.homeTeam;
+                    losers.push(loser);
+                }
+            });
+            
+            if (losers.length < 2) {
+                round2Matches.forEach(m => {
+                    const userPred = knockoutPredictions[username]?.[m.id];
+                    if (userPred) {
+                        const loser = m.home === userPred ? m.away : m.home;
+                        losers.push(loser);
+                    }
+                });
+            }
+            
+            return {
+                id: 'thirdPlace',
+                home: losers[0] || 'TBD',
+                away: losers[1] || 'TBD',
+                label: 'Tercer y Cuarto Puesto'
+            };
         }
 
         // Cerrar modal al hacer click fuera
