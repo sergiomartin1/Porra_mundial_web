@@ -248,7 +248,7 @@
             <button class="view-button" onclick="viewUserScores()" style="background: #6f42c1;">Puntuación Usuarios</button>
             <button class="view-button" onclick="viewBrackets()" style="background: #e74c3c;">🏆 Cuadro</button>
             <button class="view-button" onclick="viewMyBracket()" style="background: #9b59b6;">🏆 Mi Cuadro</button>
-            <button class="view-button" onclick="viewKnockout()" style="background: #e67e22;">⚔️ Eliminatorias</button>
+            <button class="view-button" onclick="viewKnockout()" style="background: #e67e22;">⚔️ Cuadro Real</button>
             <button class="logout-button" onclick="logout()">Cerrar Sesión</button>
             <img id="userProfilePhoto" class="user-profile-photo" src="" alt="Foto de perfil">
         </div>
@@ -387,22 +387,22 @@
 
         // Partidos de Eliminatorias 1/16
         const knockoutRound16Matches = [
-            { id: 'k16_1', home: 'Alemania', away: 'Paraguay', label: '1/16 - Alemania vs Paraguay' },
-            { id: 'k16_2', home: 'Francia', away: 'Suecia', label: '1/16 - Francia vs Suecia' },
-            { id: 'k16_3', home: 'Sudáfrica', away: 'Canadá', label: '1/16 - Sudáfrica vs Canadá' },
-            { id: 'k16_4', home: 'Países Bajos', away: 'Marruecos', label: '1/16 - Países Bajos vs Marruecos' },
-            { id: 'k16_5', home: 'Portugal', away: 'Croacia', label: '1/16 - Portugal vs Croacia' },
-            { id: 'k16_6', home: 'España', away: 'Austria', label: '1/16 - España vs Austria' },
-            { id: 'k16_7', home: 'Estados Unidos', away: 'Bosnia y Herzegovina', label: '1/16 - EE.UU. vs Bosnia y Herzegovina' },
-            { id: 'k16_8', home: 'Bélgica', away: 'Senegal', label: '1/16 - Bélgica vs Senegal' },
-            { id: 'k16_9', home: 'Brasil', away: 'Japón', label: '1/16 - Brasil vs Japón' },
-            { id: 'k16_10', home: 'Costa de Marfil', away: 'Noruega', label: '1/16 - Costa de Marfil vs Noruega' },
-            { id: 'k16_11', home: 'México', away: 'Ecuador', label: '1/16 - México vs Ecuador' },
-            { id: 'k16_12', home: 'Inglaterra', away: 'RD Congo', label: '1/16 - Inglaterra vs RD Congo' },
-            { id: 'k16_13', home: 'Argentina', away: 'Islas de Cabo Verde', label: '1/16 - Argentina vs Cabo Verde' },
-            { id: 'k16_14', home: 'Australia', away: 'Egipto', label: '1/16 - Australia vs Egipto' },
-            { id: 'k16_15', home: 'Suiza', away: 'Argelia', label: '1/16 - Suiza vs Argelia' },
-            { id: 'k16_16', home: 'Colombia', away: 'Ghana', label: '1/16 - Colombia vs Ghana' }
+            { id: 'k16_1', home: 'Sudáfrica', away: 'Canadá', label: 'Partido 73 - Sudáfrica vs Canadá', date: '28 jun', venue: 'Los Ángeles' },
+            { id: 'k16_2', home: 'Alemania', away: 'Paraguay', label: 'Partido 74 - Alemania vs Paraguay', date: '29 jun', venue: 'Boston' },
+            { id: 'k16_3', home: 'Países Bajos', away: 'Marruecos', label: 'Partido 75 - Países Bajos vs Marruecos', date: '29 jun', venue: 'Monterrey' },
+            { id: 'k16_4', home: 'Brasil', away: 'Japón', label: 'Partido 76 - Brasil vs Japón', date: '29 jun', venue: 'Houston' },
+            { id: 'k16_5', home: 'Costa de Marfil', away: 'Noruega', label: 'Partido 77 - Costa de Marfil vs Noruega', date: '30 jun', venue: 'Dallas' },
+            { id: 'k16_6', home: 'Francia', away: 'Suecia', label: 'Partido 78 - Francia vs Suecia', date: '30 jun', venue: 'Nueva York' },
+            { id: 'k16_7', home: 'México', away: 'Ecuador', label: 'Partido 79 - México vs Ecuador', date: '30 jun', venue: 'Ciudad de México' },
+            { id: 'k16_8', home: 'Inglaterra', away: 'RD Congo', label: 'Partido 80 - Inglaterra vs RD Congo', date: '1 jul', venue: 'Atlanta' },
+            { id: 'k16_9', home: 'Estados Unidos', away: 'Bosnia y Herzegovina', label: 'Partido 81 - EE.UU. vs Bosnia y Herzegovina', date: '1 jul', venue: 'San Francisco' },
+            { id: 'k16_10', home: 'Bélgica', away: 'Senegal', label: 'Partido 82 - Bélgica vs Senegal', date: '1 jul', venue: 'Seattle' },
+            { id: 'k16_11', home: 'Portugal', away: 'Croacia', label: 'Partido 83 - Portugal vs Croacia', date: '2 jul', venue: 'Toronto' },
+            { id: 'k16_12', home: 'España', away: 'Austria', label: 'Partido 84 - España vs Austria', date: '2 jul', venue: 'Los Ángeles' },
+            { id: 'k16_13', home: 'Suiza', away: 'Argelia', label: 'Partido 85 - Suiza vs Argelia', date: '2 jul', venue: 'Vancouver' },
+            { id: 'k16_14', home: 'Argentina', away: 'Islas de Cabo Verde', label: 'Partido 86 - Argentina vs Cabo Verde', date: '3 jul', venue: 'Miami' },
+            { id: 'k16_15', home: 'Colombia', away: 'Ghana', label: 'Partido 87 - Colombia vs Ghana', date: '3 jul', venue: 'Kansas City' },
+            { id: 'k16_16', home: 'Australia', away: 'Egipto', label: 'Partido 88 - Australia vs Egipto', date: '3 jul', venue: 'Dallas' }
         ];
 
         // ========================================================================
@@ -465,7 +465,7 @@
 
         const equiposPanch = ['México', 'Paraguay', 'Ecuador', 'Colombia', 'Panamá'];
         const equiposEspana = ['España'];
-        const PREDICTION_DEADLINE = new Date(2026, 6, 1, 0, 0, 0);
+        const PREDICTION_DEADLINE = new Date(2026, 6, 2, 23, 59, 0);
 
         // ========================================================================
         // VARIABLES GLOBALES
@@ -478,6 +478,7 @@
         let userThirdsSelections = {};
         let knockoutPredictions = {};
         let knockoutResults = {};
+        let realBracketPredictions = {};
         let dataLoaded = false;
         let audiosPanch = null;
         let audiosEspana = null;
@@ -626,6 +627,7 @@
                 userThirdsSelections: userThirdsSelections || {},
                 knockoutPredictions: knockoutPredictions || {},
                 knockoutResults: knockoutResults || {},
+                realBracketPredictions: realBracketPredictions || {},
                 lastUpdate: new Date().toISOString()
             };
 
@@ -693,6 +695,9 @@
                 if (record.knockoutResults && Object.keys(record.knockoutResults).length > 0) {
                     knockoutResults = record.knockoutResults;
                 }
+                if (record.realBracketPredictions && Object.keys(record.realBracketPredictions).length > 0) {
+                    realBracketPredictions = record.realBracketPredictions;
+                }
 
                 console.log('✅ Datos cargados desde la nube');
                 dataLoaded = true;
@@ -715,6 +720,9 @@
             if (currentUser && !knockoutPredictions[currentUser]) {
                 knockoutPredictions[currentUser] = {};
             }
+            if (currentUser && !realBracketPredictions[currentUser]) {
+                realBracketPredictions[currentUser] = {};
+            }
 
             // Verificar bloqueo
             const blockedStatus = localStorage.getItem('userBlocked');
@@ -731,6 +739,9 @@
             await loadDataFromCloud();
             if (currentUser && !knockoutPredictions[currentUser]) {
                 knockoutPredictions[currentUser] = {};
+            }
+            if (currentUser && !realBracketPredictions[currentUser]) {
+                realBracketPredictions[currentUser] = {};
             }
             return true;
         }
@@ -1820,14 +1831,20 @@
 
             totalScores.forEach((user, index) => {
                 const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+                
+                // Mostrar PIN como TRAMPOSO
+                const displayName = user.name === 'PIN' ? '<span style="color: #e53e3e; font-weight: 900;">TRAMPOSO</span>' : user.name;
+                const displayTotal = user.name === 'PIN' ? '<span style="color: #e53e3e;">0</span>' : user.total;
+                const displayGroup = user.name === 'PIN' ? '<span style="color: #e53e3e;">0</span>' : user.group;
+                const displayKnockout = user.name === 'PIN' ? '<span style="color: #e53e3e;">0</span>' : user.knockout;
 
                 tableHTML += `
                     <tr>
                         <td>${medal} ${index + 1}</td>
-                        <td>${user.name}</td>
-                        <td><strong style="font-size: 1.3em; color: #667eea;">${user.total}</strong></td>
-                        <td>${user.group}</td>
-                        <td>${user.knockout}</td>
+                        <td>${displayName}</td>
+                        <td><strong style="font-size: 1.3em; color: ${user.name === 'PIN' ? '#e53e3e' : '#667eea'};">${displayTotal}</strong></td>
+                        <td>${displayGroup}</td>
+                        <td>${displayKnockout}</td>
                     </tr>
                 `;
             });
@@ -1861,32 +1878,20 @@
             const modal = document.getElementById('summaryModal');
             const statsContainer = document.getElementById('statsContainer');
             const tableContainer = document.getElementById('summaryTableContainer');
-            document.getElementById('modalTitle').textContent = '⚔️ Eliminatorias - 1/16 de Final';
+            document.getElementById('modalTitle').textContent = '⚔️ Cuadro Real - Predicciones Activas';
 
             statsContainer.innerHTML = `
                 <div class="knockout-info">
-                    <p>📅 Puedes hacer tus predicciones hasta el <strong>1 de julio de 2026</strong></p>
-                    <p style="margin-top: 5px;">🏆 Acierta el ganador de cada partido. Si aciertas cruces futuros, sumarás puntos extra.</p>
+                    <p>🏆 <strong>Cuadro Real:</strong> Aquí puedes predecir el ganador de cada partido desde OCTAVOS en adelante.</p>
+                    <p style="margin-top: 5px;">⏰ Puedes cambiar tu predicción hasta justo antes de que empiece cada partido.</p>
+                    <p style="margin-top: 5px;">💡 1 punto por acierto + puntos EXTRA si acertaste el cruce en "Mi Cuadro".</p>
                 </div>
             `;
-
-            const now = new Date();
-            const isPastDeadline = now >= PREDICTION_DEADLINE && currentUser !== 'ADMIN';
-
-            if (isPastDeadline && currentUser !== 'ADMIN') {
-                statsContainer.innerHTML += `
-                    <div style="background: #fed7d7; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
-                        <p style="color: #742a2a; font-weight: 600; font-size: 1.1em;">⛔ El plazo para hacer predicciones ha finalizado (1 de julio 2026)</p>
-                        <p style="color: #742a2a;">Puedes ver tus predicciones pero no modificarlas.</p>
-                    </div>
-                `;
-            }
 
             let contentHTML = '';
             contentHTML += `
                 <div class="phase-selector" id="phaseSelector">
-                    <button class="active" onclick="showKnockoutPhase('round16')">1/16 Final</button>
-                    <button onclick="showKnockoutPhase('round8')">Octavos</button>
+                    <button class="active" onclick="showKnockoutPhase('round8')">Octavos</button>
                     <button onclick="showKnockoutPhase('round4')">Cuartos</button>
                     <button onclick="showKnockoutPhase('round2')">Semis</button>
                     <button onclick="showKnockoutPhase('final')">Final</button>
@@ -1898,7 +1903,7 @@
             tableContainer.innerHTML = contentHTML;
             modal.style.display = 'block';
 
-            showKnockoutPhase('round16');
+            showKnockoutPhase('round8');
         }
 
         function showKnockoutPhase(phase) {
@@ -1915,9 +1920,7 @@
 
             let html = '';
 
-            if (phase === 'round16') {
-                html += renderKnockoutRound16(isPastDeadline);
-            } else if (phase === 'round8') {
+            if (phase === 'round8') {
                 html += renderKnockoutRound8(isPastDeadline);
             } else if (phase === 'round4') {
                 html += renderKnockoutRound4(isPastDeadline);
@@ -1991,12 +1994,12 @@
             let html = `
                 <div class="knockout-round">
                     <div class="round-title">Octavos de Final</div>
-                    <p style="color: #718096; margin-bottom: 15px;">Los cruces se generan automáticamente según los resultados de 1/16.</p>
+                    <p style="color: #718096; margin-bottom: 15px;">Los cruces se generan automáticamente según los resultados de 1/16. <strong>+1 punto extra</strong> si acertaste el cruce exacto en "Mi Cuadro".</p>
                     <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
             `;
 
             const round8Matches = generateRound8Matches();
-            const userPredictions = knockoutPredictions[currentUser] || {};
+            const userPredictions = realBracketPredictions[currentUser] || {};
 
             round8Matches.forEach(match => {
                 const matchId = match.id;
@@ -2023,8 +2026,8 @@
                             </div>
                             <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                                 <div class="team-select">
-                                    <select id="knockout_${matchId}" ${!isAvailable || isPastDeadline || (hasResult && currentUser !== 'ADMIN') ? 'disabled' : ''}
-                                            onchange="saveKnockoutPrediction('${matchId}')">
+                                    <select id="realKnockout_${matchId}" ${!isAvailable || (hasResult && currentUser !== 'ADMIN') ? 'disabled' : ''}
+                                            onchange="saveRealBracketPrediction('${matchId}')">
                                         <option value="">${isAvailable ? '-- Seleccionar --' : '-- Pendiente --'}</option>
                                         ${isAvailable ? `
                                             <option value="${match.home}" ${savedWinner === match.home ? 'selected' : ''}>${getFlag(match.home)}${match.home}</option>
@@ -2041,7 +2044,6 @@
 
             html += `
                     </div>
-                    ${!isPastDeadline ? `<button class="save-knockout-btn" onclick="saveKnockoutPredictions()">💾 Guardar Predicciones</button>` : ''}
                 </div>
             `;
 
@@ -2052,12 +2054,12 @@
             let html = `
                 <div class="knockout-round">
                     <div class="round-title">Cuartos de Final</div>
-                    <p style="color: #718096; margin-bottom: 15px;">Los cruces se generan automáticamente según los resultados de Octavos.</p>
+                    <p style="color: #718096; margin-bottom: 15px;">Los cruces se generan automáticamente según los resultados de Octavos. <strong>+2 puntos extra</strong> si acertaste el cruce exacto en "Mi Cuadro".</p>
                     <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
             `;
 
             const round4Matches = generateRound4Matches();
-            const userPredictions = knockoutPredictions[currentUser] || {};
+            const userPredictions = realBracketPredictions[currentUser] || {};
 
             round4Matches.forEach(match => {
                 const matchId = match.id;
@@ -2084,8 +2086,8 @@
                             </div>
                             <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                                 <div class="team-select">
-                                    <select id="knockout_${matchId}" ${!isAvailable || isPastDeadline || (hasResult && currentUser !== 'ADMIN') ? 'disabled' : ''}
-                                            onchange="saveKnockoutPrediction('${matchId}')">
+                                    <select id="realKnockout_${matchId}" ${!isAvailable || (hasResult && currentUser !== 'ADMIN') ? 'disabled' : ''}
+                                            onchange="saveRealBracketPrediction('${matchId}')">
                                         <option value="">${isAvailable ? '-- Seleccionar --' : '-- Pendiente --'}</option>
                                         ${isAvailable ? `
                                             <option value="${match.home}" ${savedWinner === match.home ? 'selected' : ''}>${getFlag(match.home)}${match.home}</option>
@@ -2102,7 +2104,6 @@
 
             html += `
                     </div>
-                    ${!isPastDeadline ? `<button class="save-knockout-btn" onclick="saveKnockoutPredictions()">💾 Guardar Predicciones</button>` : ''}
                 </div>
             `;
 
@@ -2113,12 +2114,12 @@
             let html = `
                 <div class="knockout-round">
                     <div class="round-title">Semifinales</div>
-                    <p style="color: #718096; margin-bottom: 15px;">Los cruces se generan automáticamente según los resultados de Cuartos.</p>
+                    <p style="color: #718096; margin-bottom: 15px;">Los cruces se generan automáticamente según los resultados de Cuartos. <strong>+3 puntos extra</strong> si acertaste el cruce exacto en "Mi Cuadro".</p>
                     <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
             `;
 
             const round2Matches = generateRound2Matches();
-            const userPredictions = knockoutPredictions[currentUser] || {};
+            const userPredictions = realBracketPredictions[currentUser] || {};
 
             round2Matches.forEach(match => {
                 const matchId = match.id;
@@ -2145,8 +2146,8 @@
                             </div>
                             <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                                 <div class="team-select">
-                                    <select id="knockout_${matchId}" ${!isAvailable || isPastDeadline || (hasResult && currentUser !== 'ADMIN') ? 'disabled' : ''}
-                                            onchange="saveKnockoutPrediction('${matchId}')">
+                                    <select id="realKnockout_${matchId}" ${!isAvailable || (hasResult && currentUser !== 'ADMIN') ? 'disabled' : ''}
+                                            onchange="saveRealBracketPrediction('${matchId}')">
                                         <option value="">${isAvailable ? '-- Seleccionar --' : '-- Pendiente --'}</option>
                                         ${isAvailable ? `
                                             <option value="${match.home}" ${savedWinner === match.home ? 'selected' : ''}>${getFlag(match.home)}${match.home}</option>
@@ -2163,7 +2164,6 @@
 
             html += `
                     </div>
-                    ${!isPastDeadline ? `<button class="save-knockout-btn" onclick="saveKnockoutPredictions()">💾 Guardar Predicciones</button>` : ''}
                 </div>
             `;
 
@@ -2174,12 +2174,12 @@
             let html = `
                 <div class="knockout-round">
                     <div class="round-title">🏆 Final</div>
-                    <p style="color: #718096; margin-bottom: 15px;">Los finalistas se determinan automáticamente según los resultados de Semifinales.</p>
+                    <p style="color: #718096; margin-bottom: 15px;">Los finalistas se determinan automáticamente según los resultados de Semifinales. <strong>+4 puntos extra</strong> si acertaste el cruce exacto + <strong>+1 punto</strong> por acertar campeón.</p>
                     <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
             `;
 
             const finalMatch = generateFinalMatch();
-            const userPredictions = knockoutPredictions[currentUser] || {};
+            const userPredictions = realBracketPredictions[currentUser] || {};
             const matchId = 'final';
             const savedWinner = userPredictions[matchId] || '';
             const hasResult = knockoutResults[matchId] && knockoutResults[matchId].winner;
@@ -2467,7 +2467,7 @@
 
             const now = new Date();
             if (now >= PREDICTION_DEADLINE && currentUser !== 'ADMIN') {
-                alert('⛔ El plazo para hacer predicciones ha finalizado (1 de julio 2026)');
+                alert('⛔ El plazo para hacer predicciones en "Mi Cuadro" ha finalizado (2 de julio 2026, 23:59)');
                 return;
             }
 
@@ -2476,6 +2476,30 @@
             }
 
             knockoutPredictions[currentUser][matchId] = winner;
+
+            await saveDataToCloud();
+            showAutoSaveMessage();
+        }
+
+        async function saveRealBracketPrediction(matchId) {
+            if (isBlocked) return;
+
+            const select = document.getElementById(`realKnockout_${matchId}`);
+            if (!select) return;
+
+            const winner = select.value;
+
+            // Verificar si el partido ya tiene resultado
+            if (knockoutResults[matchId] && knockoutResults[matchId].winner && currentUser !== 'ADMIN') {
+                alert('⛔ Este partido ya tiene un resultado registrado');
+                return;
+            }
+
+            if (!realBracketPredictions[currentUser]) {
+                realBracketPredictions[currentUser] = {};
+            }
+
+            realBracketPredictions[currentUser][matchId] = winner;
 
             await saveDataToCloud();
             showAutoSaveMessage();
@@ -2860,60 +2884,115 @@
         }
 
         function calculateKnockoutScore(username) {
-            if (!knockoutPredictions[username]) return 0;
+            // Bloqueo para PIN - devolver 0
+            if (username === 'PIN') return 0;
+
+            if (!knockoutPredictions[username] && !realBracketPredictions[username]) return 0;
 
             let score = 0;
-            const userPreds = knockoutPredictions[username];
+            const userMyBracketPreds = knockoutPredictions[username] || {};
+            const userRealBracketPreds = realBracketPredictions[username] || {};
 
+            // DIECISEISAVOS: 1 punto por acierto (de Mi Cuadro)
             knockoutRound16Matches.forEach(match => {
                 const result = knockoutResults[match.id];
-                if (result && result.winner && userPreds[match.id] === result.winner) {
+                if (result && result.winner && userMyBracketPreds[match.id] === result.winner) {
                     score += 1;
                 }
             });
 
+            // OCTAVOS: 1 punto por acierto + 1 punto extra si acertó el cruce exacto
             const round8Matches = generateRound8Matches();
             round8Matches.forEach(match => {
                 if (match.home !== 'TBD' && match.away !== 'TBD') {
                     const result = knockoutResults[match.id];
-                    if (result && result.winner && userPreds[match.id] === result.winner) {
-                        score += 2;
+                    
+                    // Punto por acertar ganador (desde Cuadro Real)
+                    if (result && result.winner && userRealBracketPreds[match.id] === result.winner) {
+                        score += 1;
+                    }
+                    
+                    // Punto extra por acertar el cruce (desde Mi Cuadro)
+                    const myBracketMatch = generateRound8MatchesForUser(username).find(m => m.id === match.id);
+                    if (myBracketMatch && myBracketMatch.home !== 'TBD' && myBracketMatch.away !== 'TBD') {
+                        if (myBracketMatch.home === match.home && myBracketMatch.away === match.away) {
+                            score += 1;
+                        }
                     }
                 }
             });
 
+            // CUARTOS: 1 punto por acierto + 2 puntos extra si acertó el cruce exacto
             const round4Matches = generateRound4Matches();
             round4Matches.forEach(match => {
                 if (match.home !== 'TBD' && match.away !== 'TBD') {
                     const result = knockoutResults[match.id];
-                    if (result && result.winner && userPreds[match.id] === result.winner) {
-                        score += 3;
+                    
+                    // Punto por acertar ganador (desde Cuadro Real)
+                    if (result && result.winner && userRealBracketPreds[match.id] === result.winner) {
+                        score += 1;
+                    }
+                    
+                    // 2 puntos extra por acertar el cruce (desde Mi Cuadro)
+                    const myBracketMatch = generateRound4MatchesForUser(username).find(m => m.id === match.id);
+                    if (myBracketMatch && myBracketMatch.home !== 'TBD' && myBracketMatch.away !== 'TBD') {
+                        if (myBracketMatch.home === match.home && myBracketMatch.away === match.away) {
+                            score += 2;
+                        }
                     }
                 }
             });
 
+            // SEMIFINALES: 1 punto por acierto + 3 puntos extra si acertó el cruce exacto
             const round2Matches = generateRound2Matches();
             round2Matches.forEach(match => {
                 if (match.home !== 'TBD' && match.away !== 'TBD') {
                     const result = knockoutResults[match.id];
-                    if (result && result.winner && userPreds[match.id] === result.winner) {
-                        score += 4;
+                    
+                    // Punto por acertar ganador (desde Cuadro Real)
+                    if (result && result.winner && userRealBracketPreds[match.id] === result.winner) {
+                        score += 1;
+                    }
+                    
+                    // 3 puntos extra por acertar el cruce (desde Mi Cuadro)
+                    const myBracketMatch = generateRound2MatchesForUser(username).find(m => m.id === match.id);
+                    if (myBracketMatch && myBracketMatch.home !== 'TBD' && myBracketMatch.away !== 'TBD') {
+                        if (myBracketMatch.home === match.home && myBracketMatch.away === match.away) {
+                            score += 3;
+                        }
                     }
                 }
             });
 
+            // FINAL: 1 punto por acierto + 4 puntos extra si acertó el cruce exacto + 1 punto extra por campeón
             const finalMatch = generateFinalMatch();
             if (finalMatch.home !== 'TBD' && finalMatch.away !== 'TBD') {
                 const result = knockoutResults['final'];
-                if (result && result.winner && userPreds['final'] === result.winner) {
-                    score += 5;
+                
+                // Punto por acertar ganador (desde Cuadro Real)
+                if (result && result.winner && userRealBracketPreds['final'] === result.winner) {
+                    score += 1;
+                }
+                
+                // 4 puntos extra por acertar el cruce (desde Mi Cuadro)
+                const myBracketFinal = generateFinalMatchForUser(username);
+                if (myBracketFinal && myBracketFinal.home !== 'TBD' && myBracketFinal.away !== 'TBD') {
+                    if (myBracketFinal.home === finalMatch.home && myBracketFinal.away === finalMatch.away) {
+                        score += 4;
+                    }
+                }
+                
+                // 1 punto extra adicional por acertar el campeón (desde Mi Cuadro)
+                if (result && result.winner && userMyBracketPreds['final'] === result.winner) {
+                    score += 1;
                 }
             }
 
+            // TERCER PUESTO: 1 punto por acierto
             const thirdPlaceMatch = generateThirdPlaceMatch();
             if (thirdPlaceMatch.home !== 'TBD' && thirdPlaceMatch.away !== 'TBD') {
                 const result = knockoutResults['thirdPlace'];
-                if (result && result.winner && userPreds['thirdPlace'] === result.winner) {
+                if (result && result.winner && userRealBracketPreds['thirdPlace'] === result.winner) {
                     score += 1;
                 }
             }
@@ -2941,7 +3020,7 @@
             const modal = document.getElementById('summaryModal');
             const statsContainer = document.getElementById('statsContainer');
             const tableContainer = document.getElementById('summaryTableContainer');
-            document.getElementById('modalTitle').textContent = `🏆 Cuadro de Eliminatorias`;
+            document.getElementById('modalTitle').textContent = `🏆 Mi Cuadro - Predicciones Completas`;
 
             const selector = document.getElementById('bracketUserSelector');
             const selectedUser = selector ? selector.value : currentUser;
@@ -2951,7 +3030,28 @@
                 `<option value="${u}" ${u === selectedUser ? 'selected' : ''}>${u === currentUser ? u + ' (mi cuadro)' : u}</option>`
             ).join('');
 
+            const now = new Date();
+            const isPastDeadline = now >= PREDICTION_DEADLINE;
+
+            let deadlineInfo = '';
+            if (selectedUser === currentUser && !isPastDeadline) {
+                deadlineInfo = `
+                    <div style="background: #ebf8ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #4299e1;">
+                        <p style="color: #2c5282; font-weight: 600; margin-bottom: 5px;">📅 Fecha límite: 2 de julio 2026, 23:59</p>
+                        <p style="color: #4a5568; font-size: 0.9em; margin: 0;">Predice TODOS los partidos desde 1/16 hasta la final. Los cruces se calculan automáticamente según tus predicciones.</p>
+                    </div>
+                `;
+            } else if (selectedUser === currentUser && isPastDeadline) {
+                deadlineInfo = `
+                    <div style="background: #fed7d7; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #e53e3e;">
+                        <p style="color: #742a2a; font-weight: 600; margin-bottom: 5px;">🔒 Predicciones cerradas (2 julio 2026, 23:59)</p>
+                        <p style="color: #742a2a; font-size: 0.9em; margin: 0;">Tu cuadro está bloqueado. Ahora solo puedes obtener puntos EXTRA por acertar cruces.</p>
+                    </div>
+                `;
+            }
+
             statsContainer.innerHTML = `
+                ${deadlineInfo}
                 <div class="bracket-user-selector">
                     <label>👤 Ver cuadro de:</label>
                     <select id="bracketUserSelector" onchange="viewMyBracket()">
@@ -2959,7 +3059,7 @@
                     </select>
                     <span class="user-badge" id="bracketUserBadge">${selectedUser}</span>
                     <span style="margin-left: auto; font-size: 0.85em; color: #718096;">
-                        📊 Clic en equipo para seleccionar ganador
+                        💡 Puntos extra por acertar cruces exactos
                     </span>
                 </div>
                 <div id="bracketStatsContainer"></div>
@@ -3188,7 +3288,7 @@
         async function saveKnockoutPredictionFromBracket(matchId, team, opponent) {
             const now = new Date();
             if (now >= PREDICTION_DEADLINE && currentUser !== 'ADMIN') {
-                alert('⛔ El plazo para hacer predicciones ha finalizado (1 de julio 2026)');
+                alert('⛔ El plazo para hacer predicciones en "Mi Cuadro" ha finalizado (2 de julio 2026, 23:59)');
                 return;
             }
             if (knockoutResults[matchId] && knockoutResults[matchId].winner) {
