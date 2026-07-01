@@ -3168,7 +3168,7 @@
                         breakdown.octavos.correctBase.push(result.winner);
                     }
                     
-                    const myBracketMatch = generateRound8MatchesForUser(username).find(m => m.id === match.id);
+                    const myBracketMatch = generateRound8PredictionsOnly(username).find(m => m.id === match.id);
                     if (myBracketMatch && myBracketMatch.home !== 'TBD' && myBracketMatch.away !== 'TBD') {
                         if (myBracketMatch.home === match.home && myBracketMatch.away === match.away) {
                             breakdown.octavos.bonus += 1;
@@ -3189,7 +3189,7 @@
                         breakdown.cuartos.correctBase.push(result.winner);
                     }
                     
-                    const myBracketMatch = generateRound4MatchesForUser(username).find(m => m.id === match.id);
+                    const myBracketMatch = generateRound4PredictionsOnly(username).find(m => m.id === match.id);
                     if (myBracketMatch && myBracketMatch.home !== 'TBD' && myBracketMatch.away !== 'TBD') {
                         if (myBracketMatch.home === match.home && myBracketMatch.away === match.away) {
                             breakdown.cuartos.bonus += 2;
@@ -3210,7 +3210,7 @@
                         breakdown.semis.correctBase.push(result.winner);
                     }
                     
-                    const myBracketMatch = generateRound2MatchesForUser(username).find(m => m.id === match.id);
+                    const myBracketMatch = generateRound2PredictionsOnly(username).find(m => m.id === match.id);
                     if (myBracketMatch && myBracketMatch.home !== 'TBD' && myBracketMatch.away !== 'TBD') {
                         if (myBracketMatch.home === match.home && myBracketMatch.away === match.away) {
                             breakdown.semis.bonus += 3;
@@ -3230,7 +3230,7 @@
                     breakdown.final.correctBase.push(result.winner);
                 }
                 
-                const myBracketFinal = generateFinalMatchForUser(username);
+                const myBracketFinal = generateFinalPredictionsOnly(username);
                 if (myBracketFinal && myBracketFinal.home !== 'TBD' && myBracketFinal.away !== 'TBD') {
                     if (myBracketFinal.home === finalMatch.home && myBracketFinal.away === finalMatch.away) {
                         breakdown.final.bonus += 4;
@@ -3507,11 +3507,11 @@
 
             const phases = [
                 { id: 'round16', label: '1/16 de Final', matches: knockoutRound16Matches },
-                { id: 'round8', label: 'Octavos de Final', matches: generateRound8MatchesForUser(username) },
-                { id: 'round4', label: 'Cuartos de Final', matches: generateRound4MatchesForUser(username) },
-                { id: 'round2', label: 'Semifinales', matches: generateRound2MatchesForUser(username) },
-                { id: 'final', label: '🏆 Final', matches: [generateFinalMatchForUser(username)] },
-                { id: 'thirdPlace', label: '🥉 Tercer Puesto', matches: [generateThirdPlaceMatchForUser(username)] }
+                { id: 'round8', label: 'Octavos de Final', matches: generateRound8PredictionsOnly(username) },
+                { id: 'round4', label: 'Cuartos de Final', matches: generateRound4PredictionsOnly(username) },
+                { id: 'round2', label: 'Semifinales', matches: generateRound2PredictionsOnly(username) },
+                { id: 'final', label: '🏆 Final', matches: [generateFinalPredictionsOnly(username)] },
+                { id: 'thirdPlace', label: '🥉 Tercer Puesto', matches: [generateThirdPlacePredictionsOnly(username)] }
             ];
 
             let html = '';
@@ -3544,15 +3544,7 @@
                 let matchesHTML = '';
                 validMatches.forEach(match => {
                     const matchId = match.id;
-                    let userPred = userPreds[matchId] || '';
-                    
-                    // Para octavos y posteriores, solo mostrar predicción si es uno de los equipos del cruce actual
-                    if (phase.id !== 'round16' && userPred) {
-                        if (userPred !== match.home && userPred !== match.away) {
-                            userPred = ''; // Limpiar predicción si no coincide con el cruce actual
-                        }
-                    }
-                    
+                    const userPred = userPreds[matchId] || '';
                     const realResult = knockoutResults[matchId];
                     const realWinner = realResult?.winner || '';
 
@@ -3953,6 +3945,27 @@
                 home: winners['k2_1'] || 'TBD',
                 away: winners['k2_2'] || 'TBD',
                 label: 'Final'
+            };
+        }
+
+        // Genera cruce de tercer puesto basándose SOLO en las predicciones del usuario
+        function generateThirdPlacePredictionsOnly(username) {
+            const round2Matches = generateRound2PredictionsOnly(username);
+            const losers = [];
+
+            round2Matches.forEach(m => {
+                const userPred = knockoutPredictions[username]?.[m.id];
+                if (userPred && m.home !== 'TBD' && m.away !== 'TBD') {
+                    const loser = m.home === userPred ? m.away : m.home;
+                    losers.push(loser);
+                }
+            });
+
+            return {
+                id: 'thirdPlace',
+                home: losers[0] || 'TBD',
+                away: losers[1] || 'TBD',
+                label: 'Tercer y Cuarto Puesto'
             };
         }
 
