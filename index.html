@@ -2018,7 +2018,7 @@
                 const canPredict = isAvailable && !hasResult && currentUser !== 'ADMIN';
 
                 // Verificar si el usuario acertó el cruce en "Mi Cuadro"
-                const myBracketMatch = generateRound8MatchesForUser(currentUser).find(m => m.id === match.id);
+                const myBracketMatch = generateRound8PredictionsOnly(currentUser).find(m => m.id === match.id);
                 const hasCorrectCross = myBracketMatch && myBracketMatch.home === match.home && myBracketMatch.away === match.away;
 
                 html += `
@@ -2101,7 +2101,7 @@
                 const canPredict = isAvailable && !hasResult && currentUser !== 'ADMIN';
 
                 // Verificar si el usuario acertó el cruce en "Mi Cuadro"
-                const myBracketMatch = generateRound4MatchesForUser(currentUser).find(m => m.id === match.id);
+                const myBracketMatch = generateRound4PredictionsOnly(currentUser).find(m => m.id === match.id);
                 const hasCorrectCross = myBracketMatch && myBracketMatch.home === match.home && myBracketMatch.away === match.away;
 
                 html += `
@@ -2184,7 +2184,7 @@
                 const canPredict = isAvailable && !hasResult && currentUser !== 'ADMIN';
 
                 // Verificar si el usuario acertó el cruce en "Mi Cuadro"
-                const myBracketMatch = generateRound2MatchesForUser(currentUser).find(m => m.id === match.id);
+                const myBracketMatch = generateRound2PredictionsOnly(currentUser).find(m => m.id === match.id);
                 const hasCorrectCross = myBracketMatch && myBracketMatch.home === match.home && myBracketMatch.away === match.away;
 
                 html += `
@@ -2265,7 +2265,7 @@
             const canPredict = isAvailable && !hasResult && currentUser !== 'ADMIN';
 
             // Verificar si el usuario acertó el cruce en "Mi Cuadro"
-            const myBracketFinal = generateFinalMatchForUser(currentUser);
+            const myBracketFinal = generateFinalPredictionsOnly(currentUser);
             const hasCorrectCross = myBracketFinal && myBracketFinal.home === finalMatch.home && myBracketFinal.away === finalMatch.away;
 
             html += `
@@ -3030,7 +3030,7 @@
                     }
                     
                     // Punto extra por acertar el cruce (desde Mi Cuadro)
-                    const myBracketMatch = generateRound8MatchesForUser(username).find(m => m.id === match.id);
+                    const myBracketMatch = generateRound8PredictionsOnly(username).find(m => m.id === match.id);
                     if (myBracketMatch && myBracketMatch.home !== 'TBD' && myBracketMatch.away !== 'TBD') {
                         if (myBracketMatch.home === match.home && myBracketMatch.away === match.away) {
                             score += 1;
@@ -3051,7 +3051,7 @@
                     }
                     
                     // 2 puntos extra por acertar el cruce (desde Mi Cuadro)
-                    const myBracketMatch = generateRound4MatchesForUser(username).find(m => m.id === match.id);
+                    const myBracketMatch = generateRound4PredictionsOnly(username).find(m => m.id === match.id);
                     if (myBracketMatch && myBracketMatch.home !== 'TBD' && myBracketMatch.away !== 'TBD') {
                         if (myBracketMatch.home === match.home && myBracketMatch.away === match.away) {
                             score += 2;
@@ -3072,7 +3072,7 @@
                     }
                     
                     // 3 puntos extra por acertar el cruce (desde Mi Cuadro)
-                    const myBracketMatch = generateRound2MatchesForUser(username).find(m => m.id === match.id);
+                    const myBracketMatch = generateRound2PredictionsOnly(username).find(m => m.id === match.id);
                     if (myBracketMatch && myBracketMatch.home !== 'TBD' && myBracketMatch.away !== 'TBD') {
                         if (myBracketMatch.home === match.home && myBracketMatch.away === match.away) {
                             score += 3;
@@ -3092,7 +3092,7 @@
                 }
                 
                 // 4 puntos extra por acertar el cruce (desde Mi Cuadro)
-                const myBracketFinal = generateFinalMatchForUser(username);
+                const myBracketFinal = generateFinalPredictionsOnly(username);
                 if (myBracketFinal && myBracketFinal.home !== 'TBD' && myBracketFinal.away !== 'TBD') {
                     if (myBracketFinal.home === finalMatch.home && myBracketFinal.away === finalMatch.away) {
                         score += 4;
@@ -3544,7 +3544,15 @@
                 let matchesHTML = '';
                 validMatches.forEach(match => {
                     const matchId = match.id;
-                    const userPred = userPreds[matchId] || '';
+                    let userPred = userPreds[matchId] || '';
+                    
+                    // Para octavos y posteriores, solo mostrar predicción si es uno de los equipos del cruce actual
+                    if (phase.id !== 'round16' && userPred) {
+                        if (userPred !== match.home && userPred !== match.away) {
+                            userPred = ''; // Limpiar predicción si no coincide con el cruce actual
+                        }
+                    }
+                    
                     const realResult = knockoutResults[matchId];
                     const realWinner = realResult?.winner || '';
 
@@ -3577,7 +3585,7 @@
                     } else {
                         status = 'waiting';
                         statusText = '⏳ Sin predecir';
-                        statusClass = 'waiting';
+                        statusClass = 'pending';
                         stats.pending++;
                     }
 
@@ -3697,6 +3705,42 @@
         }
 
         // Funciones para generar cruces para un usuario específico
+        
+        // Genera cruces basándose SOLO en las predicciones del usuario (para verificar aciertos)
+        function generateRound8PredictionsOnly(username) {
+            const matches = [];
+            const winners = {};
+
+            knockoutRound16Matches.forEach(m => {
+                const userPred = knockoutPredictions[username]?.[m.id];
+                if (userPred) {
+                    winners[m.id] = userPred;
+                }
+            });
+
+            const pairs = [
+                { id: 'k8_1', homeId: 'k16_2', awayId: 'k16_6', label: 'Ganador 2 vs Ganador 6' },
+                { id: 'k8_2', homeId: 'k16_1', awayId: 'k16_3', label: 'Ganador 1 vs Ganador 3' },
+                { id: 'k8_3', homeId: 'k16_4', awayId: 'k16_5', label: 'Ganador 4 vs Ganador 5' },
+                { id: 'k8_4', homeId: 'k16_7', awayId: 'k16_8', label: 'Ganador 7 vs Ganador 8' },
+                { id: 'k8_5', homeId: 'k16_11', awayId: 'k16_12', label: 'Ganador 11 vs Ganador 12' },
+                { id: 'k8_6', homeId: 'k16_9', awayId: 'k16_10', label: 'Ganador 9 vs Ganador 10' },
+                { id: 'k8_7', homeId: 'k16_14', awayId: 'k16_16', label: 'Ganador 14 vs Ganador 16' },
+                { id: 'k8_8', homeId: 'k16_13', awayId: 'k16_15', label: 'Ganador 13 vs Ganador 15' }
+            ];
+
+            pairs.forEach(p => {
+                matches.push({
+                    id: p.id,
+                    home: winners[p.homeId] || 'TBD',
+                    away: winners[p.awayId] || 'TBD',
+                    label: p.label
+                });
+            });
+
+            return matches;
+        }
+
         function generateRound8MatchesForUser(username) {
             const matches = [];
             const winners = {};
@@ -3736,6 +3780,38 @@
             return matches;
         }
 
+        // Genera cruces de cuartos basándose SOLO en las predicciones del usuario
+        function generateRound4PredictionsOnly(username) {
+            const matches = [];
+            const winners = {};
+            const round8Matches = generateRound8PredictionsOnly(username);
+
+            round8Matches.forEach(m => {
+                const userPred = knockoutPredictions[username]?.[m.id];
+                if (userPred) {
+                    winners[m.id] = userPred;
+                }
+            });
+
+            const pairs = [
+                { id: 'k4_1', homeId: 'k8_1', awayId: 'k8_2', label: 'Ganador Octavo 1 vs Ganador Octavo 2' },
+                { id: 'k4_2', homeId: 'k8_3', awayId: 'k8_4', label: 'Ganador Octavo 3 vs Ganador Octavo 4' },
+                { id: 'k4_3', homeId: 'k8_5', awayId: 'k8_6', label: 'Ganador Octavo 5 vs Ganador Octavo 6' },
+                { id: 'k4_4', homeId: 'k8_7', awayId: 'k8_8', label: 'Ganador Octavo 7 vs Ganador Octavo 8' }
+            ];
+
+            pairs.forEach(p => {
+                matches.push({
+                    id: p.id,
+                    home: winners[p.homeId] || 'TBD',
+                    away: winners[p.awayId] || 'TBD',
+                    label: p.label
+                });
+            });
+
+            return matches;
+        }
+
         function generateRound4MatchesForUser(username) {
             const matches = [];
             const winners = {};
@@ -3758,6 +3834,36 @@
                 { id: 'k4_2', homeId: 'k8_3', awayId: 'k8_4', label: 'Ganador Octavo 3 vs Ganador Octavo 4' },
                 { id: 'k4_3', homeId: 'k8_5', awayId: 'k8_6', label: 'Ganador Octavo 5 vs Ganador Octavo 6' },
                 { id: 'k4_4', homeId: 'k8_7', awayId: 'k8_8', label: 'Ganador Octavo 7 vs Ganador Octavo 8' }
+            ];
+
+            pairs.forEach(p => {
+                matches.push({
+                    id: p.id,
+                    home: winners[p.homeId] || 'TBD',
+                    away: winners[p.awayId] || 'TBD',
+                    label: p.label
+                });
+            });
+
+            return matches;
+        }
+
+        // Genera cruces de semis basándose SOLO en las predicciones del usuario
+        function generateRound2PredictionsOnly(username) {
+            const matches = [];
+            const winners = {};
+            const round4Matches = generateRound4PredictionsOnly(username);
+
+            round4Matches.forEach(m => {
+                const userPred = knockoutPredictions[username]?.[m.id];
+                if (userPred) {
+                    winners[m.id] = userPred;
+                }
+            });
+
+            const pairs = [
+                { id: 'k2_1', homeId: 'k4_1', awayId: 'k4_2', label: 'Ganador Cuarto 1 vs Ganador Cuarto 2' },
+                { id: 'k2_2', homeId: 'k4_3', awayId: 'k4_4', label: 'Ganador Cuarto 3 vs Ganador Cuarto 4' }
             ];
 
             pairs.forEach(p => {
@@ -3819,6 +3925,26 @@
                     if (userPred) {
                         winners[m.id] = userPred;
                     }
+                }
+            });
+
+            return {
+                id: 'final',
+                home: winners['k2_1'] || 'TBD',
+                away: winners['k2_2'] || 'TBD',
+                label: 'Final'
+            };
+        }
+
+        // Genera cruce de final basándose SOLO en las predicciones del usuario
+        function generateFinalPredictionsOnly(username) {
+            const winners = {};
+            const round2Matches = generateRound2PredictionsOnly(username);
+
+            round2Matches.forEach(m => {
+                const userPred = knockoutPredictions[username]?.[m.id];
+                if (userPred) {
+                    winners[m.id] = userPred;
                 }
             });
 
