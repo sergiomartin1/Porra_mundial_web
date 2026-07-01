@@ -2406,6 +2406,7 @@
         // ========================================================================
 
         function generateRound8Matches() {
+            // SOLO para Cuadro Real - usa únicamente knockoutResults
             const matches = [];
             const winners = {};
 
@@ -2413,12 +2414,8 @@
                 const result = knockoutResults[m.id];
                 if (result && result.winner) {
                     winners[m.id] = result.winner;
-                } else {
-                    const userPred = knockoutPredictions[currentUser]?.[m.id];
-                    if (userPred) {
-                        winners[m.id] = userPred;
-                    }
                 }
+                // NO usar predicciones de usuario aquí
             });
 
             const pairs = [
@@ -2445,6 +2442,7 @@
         }
 
         function generateRound4Matches() {
+            // SOLO para Cuadro Real - usa únicamente knockoutResults
             const matches = [];
             const winners = {};
             const round8Matches = generateRound8Matches();
@@ -2453,12 +2451,8 @@
                 const result = knockoutResults[m.id];
                 if (result && result.winner) {
                     winners[m.id] = result.winner;
-                } else {
-                    const userPred = knockoutPredictions[currentUser]?.[m.id];
-                    if (userPred) {
-                        winners[m.id] = userPred;
-                    }
                 }
+                // NO usar predicciones de usuario aquí
             });
 
             const pairs = [
@@ -2481,6 +2475,7 @@
         }
 
         function generateRound2Matches() {
+            // SOLO para Cuadro Real - usa únicamente knockoutResults
             const matches = [];
             const winners = {};
             const round4Matches = generateRound4Matches();
@@ -2489,12 +2484,8 @@
                 const result = knockoutResults[m.id];
                 if (result && result.winner) {
                     winners[m.id] = result.winner;
-                } else {
-                    const userPred = knockoutPredictions[currentUser]?.[m.id];
-                    if (userPred) {
-                        winners[m.id] = userPred;
-                    }
                 }
+                // NO usar predicciones de usuario aquí
             });
 
             const pairs = [
@@ -2515,6 +2506,7 @@
         }
 
         function generateFinalMatch() {
+            // SOLO para Cuadro Real - usa únicamente knockoutResults
             const winners = {};
             const round2Matches = generateRound2Matches();
 
@@ -2522,12 +2514,8 @@
                 const result = knockoutResults[m.id];
                 if (result && result.winner) {
                     winners[m.id] = result.winner;
-                } else {
-                    const userPred = knockoutPredictions[currentUser]?.[m.id];
-                    if (userPred) {
-                        winners[m.id] = userPred;
-                    }
                 }
+                // NO usar predicciones de usuario aquí
             });
 
             return {
@@ -2539,6 +2527,7 @@
         }
 
         function generateThirdPlaceMatch() {
+            // SOLO para Cuadro Real - usa únicamente knockoutResults
             const round2Matches = generateRound2Matches();
             const losers = [];
 
@@ -2546,19 +2535,12 @@
                 const result = knockoutResults[m.id];
                 if (result && result.winner) {
                     const loser = m.home === result.winner ? m.away : m.home;
-                    losers.push(loser);
-                }
-            });
-
-            if (losers.length < 2) {
-                round2Matches.forEach(m => {
-                    const userPred = knockoutPredictions[currentUser]?.[m.id];
-                    if (userPred) {
-                        const loser = m.home === userPred ? m.away : m.home;
+                    if (loser !== 'TBD') {
                         losers.push(loser);
                     }
-                });
-            }
+                }
+            });
+            // NO usar predicciones de usuario aquí
 
             return {
                 id: 'thirdPlace',
