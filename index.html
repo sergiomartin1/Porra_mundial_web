@@ -1824,6 +1824,7 @@
                             <th>Total</th>
                             <th>Grupos</th>
                             <th>Eliminatorias</th>
+                            <th>Desglose</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1845,6 +1846,12 @@
                         <td><strong style="font-size: 1.3em; color: ${user.name === 'PIN' ? '#e53e3e' : '#667eea'};">${displayTotal}</strong></td>
                         <td>${displayGroup}</td>
                         <td>${displayKnockout}</td>
+                        <td>
+                            ${user.knockout > 0 ? 
+                                `<button onclick="showScoreBreakdown('${user.name}')" style="padding: 6px 12px; background: #4299e1; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85em;">📊 Ver</button>` : 
+                                '<span style="color: #a0aec0; font-size: 0.85em;">-</span>'
+                            }
+                        </td>
                     </tr>
                 `;
             });
@@ -1993,50 +2000,73 @@
         function renderKnockoutRound8(isPastDeadline) {
             let html = `
                 <div class="knockout-round">
-                    <div class="round-title">Octavos de Final</div>
+                    <div class="round-title">Octavos de Final (Partido 89-96)</div>
                     <p style="color: #718096; margin-bottom: 15px;">Los cruces se generan automáticamente según los resultados de 1/16. <strong>+1 punto extra</strong> si acertaste el cruce exacto en "Mi Cuadro".</p>
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px;">
             `;
 
             const round8Matches = generateRound8Matches();
             const userPredictions = realBracketPredictions[currentUser] || {};
 
-            round8Matches.forEach(match => {
+            round8Matches.forEach((match, index) => {
                 const matchId = match.id;
                 const savedWinner = userPredictions[matchId] || '';
                 const hasResult = knockoutResults[matchId] && knockoutResults[matchId].winner;
                 const realWinner = hasResult ? knockoutResults[matchId].winner : '';
 
-                const flagHome = getFlag(match.home);
-                const flagAway = getFlag(match.away);
-                const flagWinner = getFlag(realWinner);
-
-                let resultDisplay = '';
-                if (hasResult) {
-                    resultDisplay = `<span style="color: #48bb78; font-weight: 600; margin-left: 10px;">✅ Ganador: ${flagWinner}${realWinner}</span>`;
-                }
-
                 const isAvailable = match.home !== 'TBD' && match.away !== 'TBD';
+                const canPredict = isAvailable && !hasResult && currentUser !== 'ADMIN';
+
+                // Verificar si el usuario acertó el cruce en "Mi Cuadro"
+                const myBracketMatch = generateRound8MatchesForUser(currentUser).find(m => m.id === match.id);
+                const hasCorrectCross = myBracketMatch && myBracketMatch.home === match.home && myBracketMatch.away === match.away;
 
                 html += `
-                    <div class="knockout-match" style="${!isAvailable ? 'opacity: 0.5;' : ''}">
-                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                            <div style="flex: 1; min-width: 150px;">
-                                <div style="font-size: 0.85em; color: #718096; font-weight: 600;">Octavos - ${match.label}</div>
+                    <div class="knockout-match" style="background: ${hasCorrectCross ? '#f0fff4' : 'white'}; border-color: ${hasCorrectCross ? '#48bb78' : '#e2e8f0'};">
+                        <div style="padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <span style="font-size: 0.8em; font-weight: 600; color: #718096;">PARTIDO ${89 + index}</span>
+                                ${hasCorrectCross ? '<span style="font-size: 0.75em; background: #48bb78; color: white; padding: 4px 8px; border-radius: 4px;">+1 CRUCE ACERTADO</span>' : ''}
                             </div>
-                            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                                <div class="team-select">
-                                    <select id="realKnockout_${matchId}" ${!isAvailable || (hasResult && currentUser !== 'ADMIN') ? 'disabled' : ''}
-                                            onchange="saveRealBracketPrediction('${matchId}')">
-                                        <option value="">${isAvailable ? '-- Seleccionar --' : '-- Pendiente --'}</option>
-                                        ${isAvailable ? `
-                                            <option value="${match.home}" ${savedWinner === match.home ? 'selected' : ''}>${getFlag(match.home)}${match.home}</option>
-                                            <option value="${match.away}" ${savedWinner === match.away ? 'selected' : ''}>${getFlag(match.away)}${match.away}</option>
-                                        ` : ''}
-                                    </select>
+                            
+                            ${!isAvailable ? `
+                                <div style="text-align: center; padding: 30px 0; color: #a0aec0;">
+                                    <p style="font-size: 1.1em; font-weight: 600; margin-bottom: 8px;">⏳ Esperando resultados...</p>
+                                    <p style="font-size: 0.85em;">Falta definir los ganadores de 1/16</p>
                                 </div>
-                                ${resultDisplay}
-                            </div>
+                            ` : `
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <button 
+                                        class="bet-button ${savedWinner === match.home ? 'selected' : ''} ${hasResult && realWinner === match.home ? 'real-winner' : ''}" 
+                                        style="width: 100%; padding: 14px; font-size: 1em; display: flex; align-items: center; justify-content: space-between; ${!canPredict ? 'cursor: not-allowed; opacity: 0.7;' : ''}"
+                                        ${canPredict ? `onclick="saveRealBracketPredictionBtn('${matchId}', '${match.home}')"` : 'disabled'}>
+                                        <span style="display: flex; align-items: center; gap: 8px;">
+                                            ${getFlag(match.home)}
+                                            <strong>${match.home}</strong>
+                                        </span>
+                                        ${savedWinner === match.home ? '<span style="font-size: 1.2em;">✓</span>' : ''}
+                                    </button>
+                                    
+                                    <div style="text-align: center; color: #e53e3e; font-weight: 800; font-size: 0.9em;">VS</div>
+                                    
+                                    <button 
+                                        class="bet-button ${savedWinner === match.away ? 'selected' : ''} ${hasResult && realWinner === match.away ? 'real-winner' : ''}" 
+                                        style="width: 100%; padding: 14px; font-size: 1em; display: flex; align-items: center; justify-content: space-between; ${!canPredict ? 'cursor: not-allowed; opacity: 0.7;' : ''}"
+                                        ${canPredict ? `onclick="saveRealBracketPredictionBtn('${matchId}', '${match.away}')"` : 'disabled'}>
+                                        <span style="display: flex; align-items: center; gap: 8px;">
+                                            ${getFlag(match.away)}
+                                            <strong>${match.away}</strong>
+                                        </span>
+                                        ${savedWinner === match.away ? '<span style="font-size: 1.2em;">✓</span>' : ''}
+                                    </button>
+                                </div>
+                                
+                                ${hasResult ? `
+                                    <div style="margin-top: 12px; padding: 10px; background: #c6f6d5; border-radius: 6px; text-align: center;">
+                                        <span style="color: #22543d; font-weight: 600;">✅ Ganador: ${getFlag(realWinner)}${realWinner}</span>
+                                    </div>
+                                ` : ''}
+                            `}
                         </div>
                     </div>
                 `;
@@ -2053,50 +2083,73 @@
         function renderKnockoutRound4(isPastDeadline) {
             let html = `
                 <div class="knockout-round">
-                    <div class="round-title">Cuartos de Final</div>
+                    <div class="round-title">Cuartos de Final (Partido 97-100)</div>
                     <p style="color: #718096; margin-bottom: 15px;">Los cruces se generan automáticamente según los resultados de Octavos. <strong>+2 puntos extra</strong> si acertaste el cruce exacto en "Mi Cuadro".</p>
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px;">
             `;
 
             const round4Matches = generateRound4Matches();
             const userPredictions = realBracketPredictions[currentUser] || {};
 
-            round4Matches.forEach(match => {
+            round4Matches.forEach((match, index) => {
                 const matchId = match.id;
                 const savedWinner = userPredictions[matchId] || '';
                 const hasResult = knockoutResults[matchId] && knockoutResults[matchId].winner;
                 const realWinner = hasResult ? knockoutResults[matchId].winner : '';
 
-                const flagHome = getFlag(match.home);
-                const flagAway = getFlag(match.away);
-                const flagWinner = getFlag(realWinner);
-
-                let resultDisplay = '';
-                if (hasResult) {
-                    resultDisplay = `<span style="color: #48bb78; font-weight: 600; margin-left: 10px;">✅ Ganador: ${flagWinner}${realWinner}</span>`;
-                }
-
                 const isAvailable = match.home !== 'TBD' && match.away !== 'TBD';
+                const canPredict = isAvailable && !hasResult && currentUser !== 'ADMIN';
+
+                // Verificar si el usuario acertó el cruce en "Mi Cuadro"
+                const myBracketMatch = generateRound4MatchesForUser(currentUser).find(m => m.id === match.id);
+                const hasCorrectCross = myBracketMatch && myBracketMatch.home === match.home && myBracketMatch.away === match.away;
 
                 html += `
-                    <div class="knockout-match" style="${!isAvailable ? 'opacity: 0.5;' : ''}">
-                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                            <div style="flex: 1; min-width: 150px;">
-                                <div style="font-size: 0.85em; color: #718096; font-weight: 600;">Cuartos - ${match.label}</div>
+                    <div class="knockout-match" style="background: ${hasCorrectCross ? '#f0fff4' : 'white'}; border-color: ${hasCorrectCross ? '#48bb78' : '#e2e8f0'};">
+                        <div style="padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <span style="font-size: 0.8em; font-weight: 600; color: #718096;">PARTIDO ${97 + index}</span>
+                                ${hasCorrectCross ? '<span style="font-size: 0.75em; background: #48bb78; color: white; padding: 4px 8px; border-radius: 4px;">+2 CRUCE ACERTADO</span>' : ''}
                             </div>
-                            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                                <div class="team-select">
-                                    <select id="realKnockout_${matchId}" ${!isAvailable || (hasResult && currentUser !== 'ADMIN') ? 'disabled' : ''}
-                                            onchange="saveRealBracketPrediction('${matchId}')">
-                                        <option value="">${isAvailable ? '-- Seleccionar --' : '-- Pendiente --'}</option>
-                                        ${isAvailable ? `
-                                            <option value="${match.home}" ${savedWinner === match.home ? 'selected' : ''}>${getFlag(match.home)}${match.home}</option>
-                                            <option value="${match.away}" ${savedWinner === match.away ? 'selected' : ''}>${getFlag(match.away)}${match.away}</option>
-                                        ` : ''}
-                                    </select>
+                            
+                            ${!isAvailable ? `
+                                <div style="text-align: center; padding: 30px 0; color: #a0aec0;">
+                                    <p style="font-size: 1.1em; font-weight: 600; margin-bottom: 8px;">⏳ Esperando resultados...</p>
+                                    <p style="font-size: 0.85em;">Falta definir los ganadores de Octavos</p>
                                 </div>
-                                ${resultDisplay}
-                            </div>
+                            ` : `
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <button 
+                                        class="bet-button ${savedWinner === match.home ? 'selected' : ''} ${hasResult && realWinner === match.home ? 'real-winner' : ''}" 
+                                        style="width: 100%; padding: 14px; font-size: 1em; display: flex; align-items: center; justify-content: space-between; ${!canPredict ? 'cursor: not-allowed; opacity: 0.7;' : ''}"
+                                        ${canPredict ? `onclick="saveRealBracketPredictionBtn('${matchId}', '${match.home}')"` : 'disabled'}>
+                                        <span style="display: flex; align-items: center; gap: 8px;">
+                                            ${getFlag(match.home)}
+                                            <strong>${match.home}</strong>
+                                        </span>
+                                        ${savedWinner === match.home ? '<span style="font-size: 1.2em;">✓</span>' : ''}
+                                    </button>
+                                    
+                                    <div style="text-align: center; color: #e53e3e; font-weight: 800; font-size: 0.9em;">VS</div>
+                                    
+                                    <button 
+                                        class="bet-button ${savedWinner === match.away ? 'selected' : ''} ${hasResult && realWinner === match.away ? 'real-winner' : ''}" 
+                                        style="width: 100%; padding: 14px; font-size: 1em; display: flex; align-items: center; justify-content: space-between; ${!canPredict ? 'cursor: not-allowed; opacity: 0.7;' : ''}"
+                                        ${canPredict ? `onclick="saveRealBracketPredictionBtn('${matchId}', '${match.away}')"` : 'disabled'}>
+                                        <span style="display: flex; align-items: center; gap: 8px;">
+                                            ${getFlag(match.away)}
+                                            <strong>${match.away}</strong>
+                                        </span>
+                                        ${savedWinner === match.away ? '<span style="font-size: 1.2em;">✓</span>' : ''}
+                                    </button>
+                                </div>
+                                
+                                ${hasResult ? `
+                                    <div style="margin-top: 12px; padding: 10px; background: #c6f6d5; border-radius: 6px; text-align: center;">
+                                        <span style="color: #22543d; font-weight: 600;">✅ Ganador: ${getFlag(realWinner)}${realWinner}</span>
+                                    </div>
+                                ` : ''}
+                            `}
                         </div>
                     </div>
                 `;
@@ -2113,50 +2166,73 @@
         function renderKnockoutRound2(isPastDeadline) {
             let html = `
                 <div class="knockout-round">
-                    <div class="round-title">Semifinales</div>
+                    <div class="round-title">Semifinales (Partido 101-102)</div>
                     <p style="color: #718096; margin-bottom: 15px;">Los cruces se generan automáticamente según los resultados de Cuartos. <strong>+3 puntos extra</strong> si acertaste el cruce exacto en "Mi Cuadro".</p>
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px;">
             `;
 
             const round2Matches = generateRound2Matches();
             const userPredictions = realBracketPredictions[currentUser] || {};
 
-            round2Matches.forEach(match => {
+            round2Matches.forEach((match, index) => {
                 const matchId = match.id;
                 const savedWinner = userPredictions[matchId] || '';
                 const hasResult = knockoutResults[matchId] && knockoutResults[matchId].winner;
                 const realWinner = hasResult ? knockoutResults[matchId].winner : '';
 
-                const flagHome = getFlag(match.home);
-                const flagAway = getFlag(match.away);
-                const flagWinner = getFlag(realWinner);
-
-                let resultDisplay = '';
-                if (hasResult) {
-                    resultDisplay = `<span style="color: #48bb78; font-weight: 600; margin-left: 10px;">✅ Ganador: ${flagWinner}${realWinner}</span>`;
-                }
-
                 const isAvailable = match.home !== 'TBD' && match.away !== 'TBD';
+                const canPredict = isAvailable && !hasResult && currentUser !== 'ADMIN';
+
+                // Verificar si el usuario acertó el cruce en "Mi Cuadro"
+                const myBracketMatch = generateRound2MatchesForUser(currentUser).find(m => m.id === match.id);
+                const hasCorrectCross = myBracketMatch && myBracketMatch.home === match.home && myBracketMatch.away === match.away;
 
                 html += `
-                    <div class="knockout-match" style="${!isAvailable ? 'opacity: 0.5;' : ''}">
-                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                            <div style="flex: 1; min-width: 150px;">
-                                <div style="font-size: 0.85em; color: #718096; font-weight: 600;">Semifinal - ${match.label}</div>
+                    <div class="knockout-match" style="background: ${hasCorrectCross ? '#f0fff4' : 'white'}; border-color: ${hasCorrectCross ? '#48bb78' : '#e2e8f0'};">
+                        <div style="padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <span style="font-size: 0.8em; font-weight: 600; color: #718096;">PARTIDO ${101 + index}</span>
+                                ${hasCorrectCross ? '<span style="font-size: 0.75em; background: #48bb78; color: white; padding: 4px 8px; border-radius: 4px;">+3 CRUCE ACERTADO</span>' : ''}
                             </div>
-                            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                                <div class="team-select">
-                                    <select id="realKnockout_${matchId}" ${!isAvailable || (hasResult && currentUser !== 'ADMIN') ? 'disabled' : ''}
-                                            onchange="saveRealBracketPrediction('${matchId}')">
-                                        <option value="">${isAvailable ? '-- Seleccionar --' : '-- Pendiente --'}</option>
-                                        ${isAvailable ? `
-                                            <option value="${match.home}" ${savedWinner === match.home ? 'selected' : ''}>${getFlag(match.home)}${match.home}</option>
-                                            <option value="${match.away}" ${savedWinner === match.away ? 'selected' : ''}>${getFlag(match.away)}${match.away}</option>
-                                        ` : ''}
-                                    </select>
+                            
+                            ${!isAvailable ? `
+                                <div style="text-align: center; padding: 30px 0; color: #a0aec0;">
+                                    <p style="font-size: 1.1em; font-weight: 600; margin-bottom: 8px;">⏳ Esperando resultados...</p>
+                                    <p style="font-size: 0.85em;">Falta definir los ganadores de Cuartos</p>
                                 </div>
-                                ${resultDisplay}
-                            </div>
+                            ` : `
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <button 
+                                        class="bet-button ${savedWinner === match.home ? 'selected' : ''} ${hasResult && realWinner === match.home ? 'real-winner' : ''}" 
+                                        style="width: 100%; padding: 14px; font-size: 1em; display: flex; align-items: center; justify-content: space-between; ${!canPredict ? 'cursor: not-allowed; opacity: 0.7;' : ''}"
+                                        ${canPredict ? `onclick="saveRealBracketPredictionBtn('${matchId}', '${match.home}')"` : 'disabled'}>
+                                        <span style="display: flex; align-items: center; gap: 8px;">
+                                            ${getFlag(match.home)}
+                                            <strong>${match.home}</strong>
+                                        </span>
+                                        ${savedWinner === match.home ? '<span style="font-size: 1.2em;">✓</span>' : ''}
+                                    </button>
+                                    
+                                    <div style="text-align: center; color: #e53e3e; font-weight: 800; font-size: 0.9em;">VS</div>
+                                    
+                                    <button 
+                                        class="bet-button ${savedWinner === match.away ? 'selected' : ''} ${hasResult && realWinner === match.away ? 'real-winner' : ''}" 
+                                        style="width: 100%; padding: 14px; font-size: 1em; display: flex; align-items: center; justify-content: space-between; ${!canPredict ? 'cursor: not-allowed; opacity: 0.7;' : ''}"
+                                        ${canPredict ? `onclick="saveRealBracketPredictionBtn('${matchId}', '${match.away}')"` : 'disabled'}>
+                                        <span style="display: flex; align-items: center; gap: 8px;">
+                                            ${getFlag(match.away)}
+                                            <strong>${match.away}</strong>
+                                        </span>
+                                        ${savedWinner === match.away ? '<span style="font-size: 1.2em;">✓</span>' : ''}
+                                    </button>
+                                </div>
+                                
+                                ${hasResult ? `
+                                    <div style="margin-top: 12px; padding: 10px; background: #c6f6d5; border-radius: 6px; text-align: center;">
+                                        <span style="color: #22543d; font-weight: 600;">✅ Ganador: ${getFlag(realWinner)}${realWinner}</span>
+                                    </div>
+                                ` : ''}
+                            `}
                         </div>
                     </div>
                 `;
@@ -2173,9 +2249,9 @@
         function renderKnockoutFinal(isPastDeadline) {
             let html = `
                 <div class="knockout-round">
-                    <div class="round-title">🏆 Final</div>
+                    <div class="round-title">🏆 Final (Partido 104)</div>
                     <p style="color: #718096; margin-bottom: 15px;">Los finalistas se determinan automáticamente según los resultados de Semifinales. <strong>+4 puntos extra</strong> si acertaste el cruce exacto + <strong>+1 punto</strong> por acertar campeón.</p>
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 16px; max-width: 600px; margin: 0 auto;">
             `;
 
             const finalMatch = generateFinalMatch();
@@ -2185,43 +2261,65 @@
             const hasResult = knockoutResults[matchId] && knockoutResults[matchId].winner;
             const realWinner = hasResult ? knockoutResults[matchId].winner : '';
 
-            const flagHome = getFlag(finalMatch.home);
-            const flagAway = getFlag(finalMatch.away);
-            const flagWinner = getFlag(realWinner);
-
-            let resultDisplay = '';
-            if (hasResult) {
-                resultDisplay = `<span style="color: #48bb78; font-weight: 600; margin-left: 10px;">🏆 Campeón: ${flagWinner}${realWinner}</span>`;
-            }
-
             const isAvailable = finalMatch.home !== 'TBD' && finalMatch.away !== 'TBD';
+            const canPredict = isAvailable && !hasResult && currentUser !== 'ADMIN';
+
+            // Verificar si el usuario acertó el cruce en "Mi Cuadro"
+            const myBracketFinal = generateFinalMatchForUser(currentUser);
+            const hasCorrectCross = myBracketFinal && myBracketFinal.home === finalMatch.home && myBracketFinal.away === finalMatch.away;
 
             html += `
-                <div class="knockout-match" style="${!isAvailable ? 'opacity: 0.5;' : ''}">
-                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                        <div style="flex: 1; min-width: 150px;">
-                            <div style="font-size: 0.85em; color: #718096; font-weight: 600;">Final</div>
+                <div class="knockout-match" style="background: ${hasCorrectCross ? '#f0fff4' : 'white'}; border-color: ${hasCorrectCross ? '#48bb78' : '#e2e8f0'};">
+                    <div style="padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span style="font-size: 0.85em; font-weight: 600; color: #718096;">🏆 GRAN FINAL - PARTIDO 104</span>
+                            ${hasCorrectCross ? '<span style="font-size: 0.75em; background: #48bb78; color: white; padding: 4px 8px; border-radius: 4px;">+4 CRUCE ACERTADO</span>' : ''}
                         </div>
-                        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                            <div class="team-select">
-                                <select id="knockout_${matchId}" ${!isAvailable || isPastDeadline || (hasResult && currentUser !== 'ADMIN') ? 'disabled' : ''}
-                                        onchange="saveKnockoutPrediction('${matchId}')">
-                                    <option value="">${isAvailable ? '-- Seleccionar --' : '-- Pendiente --'}</option>
-                                    ${isAvailable ? `
-                                        <option value="${finalMatch.home}" ${savedWinner === finalMatch.home ? 'selected' : ''}>${getFlag(finalMatch.home)}${finalMatch.home}</option>
-                                        <option value="${finalMatch.away}" ${savedWinner === finalMatch.away ? 'selected' : ''}>${getFlag(finalMatch.away)}${finalMatch.away}</option>
-                                    ` : ''}
-                                </select>
+                        
+                        ${!isAvailable ? `
+                            <div style="text-align: center; padding: 40px 0; color: #a0aec0;">
+                                <p style="font-size: 1.2em; font-weight: 600; margin-bottom: 8px;">⏳ Esperando resultados...</p>
+                                <p style="font-size: 0.9em;">Falta definir los ganadores de Semifinales</p>
                             </div>
-                            ${resultDisplay}
-                        </div>
+                        ` : `
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <button 
+                                    class="bet-button ${savedWinner === finalMatch.home ? 'selected' : ''} ${hasResult && realWinner === finalMatch.home ? 'real-winner' : ''}" 
+                                    style="width: 100%; padding: 18px; font-size: 1.1em; display: flex; align-items: center; justify-content: space-between; ${!canPredict ? 'cursor: not-allowed; opacity: 0.7;' : ''}"
+                                    ${canPredict ? `onclick="saveRealBracketPredictionBtn('${matchId}', '${finalMatch.home}')"` : 'disabled'}>
+                                    <span style="display: flex; align-items: center; gap: 10px;">
+                                        ${getFlag(finalMatch.home)}
+                                        <strong>${finalMatch.home}</strong>
+                                    </span>
+                                    ${savedWinner === finalMatch.home ? '<span style="font-size: 1.3em;">✓</span>' : ''}
+                                </button>
+                                
+                                <div style="text-align: center; color: #e53e3e; font-weight: 800; font-size: 1em;">VS</div>
+                                
+                                <button 
+                                    class="bet-button ${savedWinner === finalMatch.away ? 'selected' : ''} ${hasResult && realWinner === finalMatch.away ? 'real-winner' : ''}" 
+                                    style="width: 100%; padding: 18px; font-size: 1.1em; display: flex; align-items: center; justify-content: space-between; ${!canPredict ? 'cursor: not-allowed; opacity: 0.7;' : ''}"
+                                    ${canPredict ? `onclick="saveRealBracketPredictionBtn('${matchId}', '${finalMatch.away}')"` : 'disabled'}>
+                                    <span style="display: flex; align-items: center; gap: 10px;">
+                                        ${getFlag(finalMatch.away)}
+                                        <strong>${finalMatch.away}</strong>
+                                    </span>
+                                    ${savedWinner === finalMatch.away ? '<span style="font-size: 1.3em;">✓</span>' : ''}
+                                </button>
+                            </div>
+                            
+                            ${hasResult ? `
+                                <div style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, #f6e05e 0%, #f6ad55 100%); border-radius: 8px; text-align: center;">
+                                    <span style="color: #744210; font-weight: 700; font-size: 1.1em;">🏆 CAMPEÓN: ${getFlag(realWinner)}${realWinner}</span>
+                                </div>
+                            ` : ''}
+                        `}
                     </div>
                 </div>
             `;
 
             html += `
                     </div>
-                    ${!isPastDeadline ? `<button class="save-knockout-btn" onclick="saveKnockoutPredictions()">💾 Guardar Predicciones</button>` : ''}
                 </div>
             `;
 
@@ -2231,55 +2329,72 @@
         function renderKnockoutThirdPlace(isPastDeadline) {
             let html = `
                 <div class="knockout-round">
-                    <div class="round-title">🥉 Tercer y Cuarto Puesto</div>
+                    <div class="round-title">🥉 Tercer y Cuarto Puesto (Partido 103)</div>
                     <p style="color: #718096; margin-bottom: 15px;">Los participantes se determinan automáticamente según los resultados de Semifinales.</p>
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 16px; max-width: 600px; margin: 0 auto;">
             `;
 
             const thirdPlaceMatch = generateThirdPlaceMatch();
-            const userPredictions = knockoutPredictions[currentUser] || {};
+            const userPredictions = realBracketPredictions[currentUser] || {};
             const matchId = 'thirdPlace';
             const savedWinner = userPredictions[matchId] || '';
             const hasResult = knockoutResults[matchId] && knockoutResults[matchId].winner;
             const realWinner = hasResult ? knockoutResults[matchId].winner : '';
 
-            const flagHome = getFlag(thirdPlaceMatch.home);
-            const flagAway = getFlag(thirdPlaceMatch.away);
-            const flagWinner = getFlag(realWinner);
-
-            let resultDisplay = '';
-            if (hasResult) {
-                resultDisplay = `<span style="color: #48bb78; font-weight: 600; margin-left: 10px;">🥉 Tercero: ${flagWinner}${realWinner}</span>`;
-            }
-
             const isAvailable = thirdPlaceMatch.home !== 'TBD' && thirdPlaceMatch.away !== 'TBD';
+            const canPredict = isAvailable && !hasResult && currentUser !== 'ADMIN';
 
             html += `
-                <div class="knockout-match" style="${!isAvailable ? 'opacity: 0.5;' : ''}">
-                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                        <div style="flex: 1; min-width: 150px;">
-                            <div style="font-size: 0.85em; color: #718096; font-weight: 600;">Tercer y Cuarto Puesto</div>
+                <div class="knockout-match">
+                    <div style="padding: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <span style="font-size: 0.8em; font-weight: 600; color: #718096;">🥉 TERCER PUESTO - PARTIDO 103</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                            <div class="team-select">
-                                <select id="knockout_${matchId}" ${!isAvailable || isPastDeadline || (hasResult && currentUser !== 'ADMIN') ? 'disabled' : ''}
-                                        onchange="saveKnockoutPrediction('${matchId}')">
-                                    <option value="">${isAvailable ? '-- Seleccionar --' : '-- Pendiente --'}</option>
-                                    ${isAvailable ? `
-                                        <option value="${thirdPlaceMatch.home}" ${savedWinner === thirdPlaceMatch.home ? 'selected' : ''}>${getFlag(thirdPlaceMatch.home)}${thirdPlaceMatch.home}</option>
-                                        <option value="${thirdPlaceMatch.away}" ${savedWinner === thirdPlaceMatch.away ? 'selected' : ''}>${getFlag(thirdPlaceMatch.away)}${thirdPlaceMatch.away}</option>
-                                    ` : ''}
-                                </select>
+                        
+                        ${!isAvailable ? `
+                            <div style="text-align: center; padding: 30px 0; color: #a0aec0;">
+                                <p style="font-size: 1.1em; font-weight: 600; margin-bottom: 8px;">⏳ Esperando resultados...</p>
+                                <p style="font-size: 0.85em;">Falta definir los ganadores de Semifinales</p>
                             </div>
-                            ${resultDisplay}
-                        </div>
+                        ` : `
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <button 
+                                    class="bet-button ${savedWinner === thirdPlaceMatch.home ? 'selected' : ''} ${hasResult && realWinner === thirdPlaceMatch.home ? 'real-winner' : ''}" 
+                                    style="width: 100%; padding: 14px; font-size: 1em; display: flex; align-items: center; justify-content: space-between; ${!canPredict ? 'cursor: not-allowed; opacity: 0.7;' : ''}"
+                                    ${canPredict ? `onclick="saveRealBracketPredictionBtn('${matchId}', '${thirdPlaceMatch.home}')"` : 'disabled'}>
+                                    <span style="display: flex; align-items: center; gap: 8px;">
+                                        ${getFlag(thirdPlaceMatch.home)}
+                                        <strong>${thirdPlaceMatch.home}</strong>
+                                    </span>
+                                    ${savedWinner === thirdPlaceMatch.home ? '<span style="font-size: 1.2em;">✓</span>' : ''}
+                                </button>
+                                
+                                <div style="text-align: center; color: #e53e3e; font-weight: 800; font-size: 0.9em;">VS</div>
+                                
+                                <button 
+                                    class="bet-button ${savedWinner === thirdPlaceMatch.away ? 'selected' : ''} ${hasResult && realWinner === thirdPlaceMatch.away ? 'real-winner' : ''}" 
+                                    style="width: 100%; padding: 14px; font-size: 1em; display: flex; align-items: center; justify-content: space-between; ${!canPredict ? 'cursor: not-allowed; opacity: 0.7;' : ''}"
+                                    ${canPredict ? `onclick="saveRealBracketPredictionBtn('${matchId}', '${thirdPlaceMatch.away}')"` : 'disabled'}>
+                                    <span style="display: flex; align-items: center; gap: 8px;">
+                                        ${getFlag(thirdPlaceMatch.away)}
+                                        <strong>${thirdPlaceMatch.away}</strong>
+                                    </span>
+                                    ${savedWinner === thirdPlaceMatch.away ? '<span style="font-size: 1.2em;">✓</span>' : ''}
+                                </button>
+                            </div>
+                            
+                            ${hasResult ? `
+                                <div style="margin-top: 12px; padding: 10px; background: #feebc8; border-radius: 6px; text-align: center;">
+                                    <span style="color: #7c2d12; font-weight: 600;">🥉 Tercero: ${getFlag(realWinner)}${realWinner}</span>
+                                </div>
+                            ` : ''}
+                        `}
                     </div>
                 </div>
             `;
 
             html += `
                     </div>
-                    ${!isPastDeadline ? `<button class="save-knockout-btn" onclick="saveKnockoutPredictions()">💾 Guardar Predicciones</button>` : ''}
                 </div>
             `;
 
@@ -2503,6 +2618,26 @@
 
             await saveDataToCloud();
             showAutoSaveMessage();
+        }
+
+        async function saveRealBracketPredictionBtn(matchId, winner) {
+            if (isBlocked) return;
+
+            // Verificar si el partido ya tiene resultado
+            if (knockoutResults[matchId] && knockoutResults[matchId].winner && currentUser !== 'ADMIN') {
+                alert('⛔ Este partido ya tiene un resultado registrado');
+                return;
+            }
+
+            if (!realBracketPredictions[currentUser]) {
+                realBracketPredictions[currentUser] = {};
+            }
+
+            realBracketPredictions[currentUser][matchId] = winner;
+
+            await saveDataToCloud();
+            showAutoSaveMessage();
+            viewKnockout(); // Refrescar vista
         }
 
         async function saveKnockoutPredictions() {
@@ -2998,6 +3133,258 @@
             }
 
             return score;
+        }
+
+        function getKnockoutScoreBreakdown(username) {
+            // Retorna un objeto con el desglose detallado de puntuación
+            if (username === 'PIN') {
+                return {
+                    total: 0,
+                    dieciseisavos: { base: 0, correct: [] },
+                    octavos: { base: 0, bonus: 0, correctBase: [], correctBonus: [] },
+                    cuartos: { base: 0, bonus: 0, correctBase: [], correctBonus: [] },
+                    semis: { base: 0, bonus: 0, correctBase: [], correctBonus: [] },
+                    final: { base: 0, bonus: 0, champion: 0, correctBase: [], correctBonus: [], championTeam: null },
+                    tercerPuesto: { base: 0, correct: [] }
+                };
+            }
+
+            if (!knockoutPredictions[username] && !realBracketPredictions[username]) {
+                return { total: 0 };
+            }
+
+            const userMyBracketPreds = knockoutPredictions[username] || {};
+            const userRealBracketPreds = realBracketPredictions[username] || {};
+
+            const breakdown = {
+                total: 0,
+                dieciseisavos: { base: 0, correct: [] },
+                octavos: { base: 0, bonus: 0, correctBase: [], correctBonus: [] },
+                cuartos: { base: 0, bonus: 0, correctBase: [], correctBonus: [] },
+                semis: { base: 0, bonus: 0, correctBase: [], correctBonus: [] },
+                final: { base: 0, bonus: 0, champion: 0, correctBase: [], correctBonus: [], championTeam: null },
+                tercerPuesto: { base: 0, correct: [] }
+            };
+
+            // DIECISEISAVOS
+            knockoutRound16Matches.forEach(match => {
+                const result = knockoutResults[match.id];
+                if (result && result.winner && userMyBracketPreds[match.id] === result.winner) {
+                    breakdown.dieciseisavos.base += 1;
+                    breakdown.dieciseisavos.correct.push(result.winner);
+                }
+            });
+
+            // OCTAVOS
+            const round8Matches = generateRound8Matches();
+            round8Matches.forEach(match => {
+                if (match.home !== 'TBD' && match.away !== 'TBD') {
+                    const result = knockoutResults[match.id];
+                    
+                    if (result && result.winner && userRealBracketPreds[match.id] === result.winner) {
+                        breakdown.octavos.base += 1;
+                        breakdown.octavos.correctBase.push(result.winner);
+                    }
+                    
+                    const myBracketMatch = generateRound8MatchesForUser(username).find(m => m.id === match.id);
+                    if (myBracketMatch && myBracketMatch.home !== 'TBD' && myBracketMatch.away !== 'TBD') {
+                        if (myBracketMatch.home === match.home && myBracketMatch.away === match.away) {
+                            breakdown.octavos.bonus += 1;
+                            breakdown.octavos.correctBonus.push(`${match.home} vs ${match.away}`);
+                        }
+                    }
+                }
+            });
+
+            // CUARTOS
+            const round4Matches = generateRound4Matches();
+            round4Matches.forEach(match => {
+                if (match.home !== 'TBD' && match.away !== 'TBD') {
+                    const result = knockoutResults[match.id];
+                    
+                    if (result && result.winner && userRealBracketPreds[match.id] === result.winner) {
+                        breakdown.cuartos.base += 1;
+                        breakdown.cuartos.correctBase.push(result.winner);
+                    }
+                    
+                    const myBracketMatch = generateRound4MatchesForUser(username).find(m => m.id === match.id);
+                    if (myBracketMatch && myBracketMatch.home !== 'TBD' && myBracketMatch.away !== 'TBD') {
+                        if (myBracketMatch.home === match.home && myBracketMatch.away === match.away) {
+                            breakdown.cuartos.bonus += 2;
+                            breakdown.cuartos.correctBonus.push(`${match.home} vs ${match.away}`);
+                        }
+                    }
+                }
+            });
+
+            // SEMIFINALES
+            const round2Matches = generateRound2Matches();
+            round2Matches.forEach(match => {
+                if (match.home !== 'TBD' && match.away !== 'TBD') {
+                    const result = knockoutResults[match.id];
+                    
+                    if (result && result.winner && userRealBracketPreds[match.id] === result.winner) {
+                        breakdown.semis.base += 1;
+                        breakdown.semis.correctBase.push(result.winner);
+                    }
+                    
+                    const myBracketMatch = generateRound2MatchesForUser(username).find(m => m.id === match.id);
+                    if (myBracketMatch && myBracketMatch.home !== 'TBD' && myBracketMatch.away !== 'TBD') {
+                        if (myBracketMatch.home === match.home && myBracketMatch.away === match.away) {
+                            breakdown.semis.bonus += 3;
+                            breakdown.semis.correctBonus.push(`${match.home} vs ${match.away}`);
+                        }
+                    }
+                }
+            });
+
+            // FINAL
+            const finalMatch = generateFinalMatch();
+            if (finalMatch.home !== 'TBD' && finalMatch.away !== 'TBD') {
+                const result = knockoutResults['final'];
+                
+                if (result && result.winner && userRealBracketPreds['final'] === result.winner) {
+                    breakdown.final.base += 1;
+                    breakdown.final.correctBase.push(result.winner);
+                }
+                
+                const myBracketFinal = generateFinalMatchForUser(username);
+                if (myBracketFinal && myBracketFinal.home !== 'TBD' && myBracketFinal.away !== 'TBD') {
+                    if (myBracketFinal.home === finalMatch.home && myBracketFinal.away === finalMatch.away) {
+                        breakdown.final.bonus += 4;
+                        breakdown.final.correctBonus.push(`${finalMatch.home} vs ${finalMatch.away}`);
+                    }
+                }
+                
+                if (result && result.winner && userMyBracketPreds['final'] === result.winner) {
+                    breakdown.final.champion += 1;
+                    breakdown.final.championTeam = result.winner;
+                }
+            }
+
+            // TERCER PUESTO
+            const thirdPlaceMatch = generateThirdPlaceMatch();
+            if (thirdPlaceMatch.home !== 'TBD' && thirdPlaceMatch.away !== 'TBD') {
+                const result = knockoutResults['thirdPlace'];
+                if (result && result.winner && userRealBracketPreds['thirdPlace'] === result.winner) {
+                    breakdown.tercerPuesto.base += 1;
+                    breakdown.tercerPuesto.correct.push(result.winner);
+                }
+            }
+
+            breakdown.total = 
+                breakdown.dieciseisavos.base +
+                breakdown.octavos.base + breakdown.octavos.bonus +
+                breakdown.cuartos.base + breakdown.cuartos.bonus +
+                breakdown.semis.base + breakdown.semis.bonus +
+                breakdown.final.base + breakdown.final.bonus + breakdown.final.champion +
+                breakdown.tercerPuesto.base;
+
+            return breakdown;
+        }
+
+        function showScoreBreakdown(username) {
+            const breakdown = getKnockoutScoreBreakdown(username);
+            
+            let html = `
+                <div style="background: white; padding: 20px; border-radius: 8px; max-width: 600px; margin: 20px auto;">
+                    <h3 style="text-align: center; color: #2d3748; margin-bottom: 20px;">
+                        📊 Desglose de Puntuación: ${username}
+                    </h3>
+                    <div style="background: #4299e1; color: white; padding: 15px; border-radius: 6px; text-align: center; font-size: 1.3em; font-weight: 700; margin-bottom: 20px;">
+                        TOTAL: ${breakdown.total} puntos
+                    </div>
+                    
+                    <div style="border-left: 4px solid #4299e1; padding-left: 12px; margin-bottom: 15px;">
+                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 5px;">
+                            🔹 Dieciseisavos: ${breakdown.dieciseisavos.base} puntos
+                        </div>
+                        ${breakdown.dieciseisavos.correct.length > 0 ? 
+                            `<div style="font-size: 0.85em; color: #718096;">Acertados: ${breakdown.dieciseisavos.correct.join(', ')}</div>` : 
+                            '<div style="font-size: 0.85em; color: #a0aec0;">Sin aciertos aún</div>'
+                        }
+                    </div>
+                    
+                    <div style="border-left: 4px solid #48bb78; padding-left: 12px; margin-bottom: 15px;">
+                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 5px;">
+                            🔸 Octavos: ${breakdown.octavos.base + breakdown.octavos.bonus} puntos
+                        </div>
+                        <div style="font-size: 0.85em; color: #718096; margin-left: 10px;">
+                            • Base: ${breakdown.octavos.base} punto${breakdown.octavos.base !== 1 ? 's' : ''}
+                            ${breakdown.octavos.correctBase.length > 0 ? ` (${breakdown.octavos.correctBase.join(', ')})` : ''}
+                        </div>
+                        <div style="font-size: 0.85em; color: #718096; margin-left: 10px;">
+                            • Bonus cruce: ${breakdown.octavos.bonus} punto${breakdown.octavos.bonus !== 1 ? 's' : ''}
+                            ${breakdown.octavos.correctBonus.length > 0 ? ` (${breakdown.octavos.correctBonus.join(', ')})` : ''}
+                        </div>
+                    </div>
+                    
+                    <div style="border-left: 4px solid #ed8936; padding-left: 12px; margin-bottom: 15px;">
+                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 5px;">
+                            🔹 Cuartos: ${breakdown.cuartos.base + breakdown.cuartos.bonus} puntos
+                        </div>
+                        <div style="font-size: 0.85em; color: #718096; margin-left: 10px;">
+                            • Base: ${breakdown.cuartos.base} punto${breakdown.cuartos.base !== 1 ? 's' : ''}
+                            ${breakdown.cuartos.correctBase.length > 0 ? ` (${breakdown.cuartos.correctBase.join(', ')})` : ''}
+                        </div>
+                        <div style="font-size: 0.85em; color: #718096; margin-left: 10px;">
+                            • Bonus cruce: ${breakdown.cuartos.bonus} punto${breakdown.cuartos.bonus !== 1 ? 's' : ''} (×2 por cruce)
+                            ${breakdown.cuartos.correctBonus.length > 0 ? ` (${breakdown.cuartos.correctBonus.join(', ')})` : ''}
+                        </div>
+                    </div>
+                    
+                    <div style="border-left: 4px solid #9f7aea; padding-left: 12px; margin-bottom: 15px;">
+                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 5px;">
+                            🔸 Semifinales: ${breakdown.semis.base + breakdown.semis.bonus} puntos
+                        </div>
+                        <div style="font-size: 0.85em; color: #718096; margin-left: 10px;">
+                            • Base: ${breakdown.semis.base} punto${breakdown.semis.base !== 1 ? 's' : ''}
+                            ${breakdown.semis.correctBase.length > 0 ? ` (${breakdown.semis.correctBase.join(', ')})` : ''}
+                        </div>
+                        <div style="font-size: 0.85em; color: #718096; margin-left: 10px;">
+                            • Bonus cruce: ${breakdown.semis.bonus} punto${breakdown.semis.bonus !== 1 ? 's' : ''} (×3 por cruce)
+                            ${breakdown.semis.correctBonus.length > 0 ? ` (${breakdown.semis.correctBonus.join(', ')})` : ''}
+                        </div>
+                    </div>
+                    
+                    <div style="border-left: 4px solid #f6ad55; padding-left: 12px; margin-bottom: 15px;">
+                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 5px;">
+                            🏆 Final: ${breakdown.final.base + breakdown.final.bonus + breakdown.final.champion} puntos
+                        </div>
+                        <div style="font-size: 0.85em; color: #718096; margin-left: 10px;">
+                            • Base: ${breakdown.final.base} punto${breakdown.final.base !== 1 ? 's' : ''}
+                            ${breakdown.final.correctBase.length > 0 ? ` (${breakdown.final.correctBase.join(', ')})` : ''}
+                        </div>
+                        <div style="font-size: 0.85em; color: #718096; margin-left: 10px;">
+                            • Bonus cruce: ${breakdown.final.bonus} punto${breakdown.final.bonus !== 1 ? 's' : ''} (×4 por cruce)
+                            ${breakdown.final.correctBonus.length > 0 ? ` (${breakdown.final.correctBonus.join(', ')})` : ''}
+                        </div>
+                        <div style="font-size: 0.85em; color: #718096; margin-left: 10px;">
+                            • Campeón: ${breakdown.final.champion} punto${breakdown.final.champion !== 1 ? 's' : ''}
+                            ${breakdown.final.championTeam ? ` (${breakdown.final.championTeam})` : ''}
+                        </div>
+                    </div>
+                    
+                    <div style="border-left: 4px solid #cbd5e0; padding-left: 12px;">
+                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 5px;">
+                            🥉 Tercer Puesto: ${breakdown.tercerPuesto.base} puntos
+                        </div>
+                        ${breakdown.tercerPuesto.correct.length > 0 ? 
+                            `<div style="font-size: 0.85em; color: #718096;">Acertado: ${breakdown.tercerPuesto.correct.join(', ')}</div>` : 
+                            '<div style="font-size: 0.85em; color: #a0aec0;">Sin aciertos aún</div>'
+                        }
+                    </div>
+                    
+                    <button onclick="closeModal()" style="margin-top: 20px; width: 100%; padding: 12px; background: #4299e1; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                        Cerrar
+                    </button>
+                </div>
+            `;
+
+            const modal = document.getElementById('summaryModal');
+            const statsContainer = document.getElementById('statsContainer');
+            modal.style.display = 'block';
+            statsContainer.innerHTML = html;
         }
 
         // ========================================================================
